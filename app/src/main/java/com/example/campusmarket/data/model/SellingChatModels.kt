@@ -87,3 +87,10 @@ data class ProposalResponse(
 data class FreeSlot(val day: String, val start_time: String, val end_time: String)
 
 data class FreeSlotsMetadata(val freeSlots: List<FreeSlot>)
+
+data class ProposalListResponse(
+    val code: String,
+    val message: String,
+    val result: List<ProposalResult>?,
+    val success: Boolean
+)

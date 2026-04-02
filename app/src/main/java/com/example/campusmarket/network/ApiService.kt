@@ -5,6 +5,7 @@ import com.example.campusmarket.data.model.ChatRoomRequest
 import com.example.campusmarket.data.model.ChatRoomResponse
 import com.example.campusmarket.data.model.MajorCategoryResponse
 import com.example.campusmarket.data.model.ProductDetailResponse
+import com.example.campusmarket.data.model.ProposalListResponse
 import com.example.campusmarket.data.model.ProposalRequest
 import com.example.campusmarket.data.model.ProposalRespondRequest
 import com.example.campusmarket.data.model.ProposalResponse
@@ -62,6 +63,12 @@ interface ApiService {
         @Path("chatRoomId") chatRoomId: Long,
         @Body request: ProposalRequest
     ): Response<ProposalResponse>
+
+    @GET("chat/rooms/{chatRoomId}/proposals")
+    suspend fun getProposals(
+        @Header("guestUuid") guestUuid: String,
+        @Path("chatRoomId") chatRoomId: Long
+    ): Response<ProposalListResponse>
 
     @PUT("chat/rooms/{chatRoomId}/proposals/{proposalId}")
     suspend fun respondToProposal(

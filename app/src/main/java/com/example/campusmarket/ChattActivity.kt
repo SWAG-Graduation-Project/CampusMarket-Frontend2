@@ -54,6 +54,10 @@ class ChattActivity : AppCompatActivity() {
     private var stompManager: StompManager? = null
     private val gson = Gson()
 
+    // POST /proposals 응답에서 저장 (판매자) 또는 GET /proposals 조회 (구매자)
+    private var pendingProposalId: Long? = null
+    private var pendingProposalType: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -108,6 +112,19 @@ class ChattActivity : AppCompatActivity() {
     private fun loadPreviousMessages() {
         val uuid = guestUuid ?: return
         lifecycleScope.launch {
+            // 현재 PENDING 제안 조회 (구매자가 proposalId를 알기 위해)
+            try {
+                val propResp = RetrofitClient.apiService.getProposals(uuid, chatRoomId)
+                val pending = propResp.body()?.result?.firstOrNull { it.proposalStatus == "PENDING" }
+                if (pending != null) {
+                    pendingProposalId = pending.proposalId
+                    pendingProposalType = pending.proposalType
+                    android.util.Log.d("PROPOSAL", "loaded pending proposalId=$pendingProposalId type=$pendingProposalType")
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("PROPOSAL", "getProposals failed: ${e.message}")
+            }
+
             try {
                 val response = RetrofitClient.apiService.getChatMessages(uuid, chatRoomId)
                 if (response.isSuccessful) {
@@ -141,7 +158,11 @@ class ChattActivity : AppCompatActivity() {
         android.util.Log.d("MSG_TYPE", "messageType=$type isProposal=$isProposal metadata=${dto.metadata}")
 
         if (isProposal) {
-            val (proposalId, proposalType, proposalStatus) = parseProposalMeta(dto.metadata)
+            val (parsedId, parsedType, parsedStatus) = parseProposalMeta(dto.metadata)
+            // metadata에 없으면 저장된 pendingProposalId 사용 (판매자: POST 응답, 구매자: GET 조회)
+            val proposalId = parsedId ?: pendingProposalId
+            val proposalType = parsedType ?: pendingProposalType
+            val proposalStatus = parsedStatus ?: "PENDING"
             android.util.Log.d("PROPOSAL", "proposalId=$proposalId proposalType=$proposalType proposalStatus=$proposalStatus")
             return ChatMessage(
                 senderName = senderName,
@@ -151,7 +172,7 @@ class ChattActivity : AppCompatActivity() {
                 messageType = "PROPOSAL",
                 proposalId = proposalId,
                 proposalType = proposalType,
-                proposalStatus = proposalStatus ?: "PENDING",
+                proposalStatus = proposalStatus,
                 metadata = dto.metadata
             )
         }
@@ -231,8 +252,14 @@ class ChattActivity : AppCompatActivity() {
                 val response = RetrofitClient.apiService.createProposal(
                     uuid, chatRoomId, ProposalRequest(proposalType)
                 )
-                android.util.Log.d("PROPOSAL", "response code=${response.code()} body=${response.body()} error=${response.errorBody()?.string()}")
-                if (!response.isSuccessful || response.body()?.success != true) {
+                android.util.Log.d("PROPOSAL", "response code=${response.code()} body=${response.body()}")
+                if (response.isSuccessful && response.body()?.success == true) {
+                    // 판매자: POST 응답에서 proposalId 저장
+                    val result = response.body()?.result
+                    pendingProposalId = result?.proposalId
+                    pendingProposalType = result?.proposalType
+                    android.util.Log.d("PROPOSAL", "stored pendingProposalId=$pendingProposalId")
+                } else {
                     Toast.makeText(this@ChattActivity, "제안 전송 실패 (${response.code()})", Toast.LENGTH_SHORT).show()
                 }
                 // 성공 시 WebSocket으로 메시지가 push됨 → onMessage에서 자동 처리
@@ -245,21 +272,27 @@ class ChattActivity : AppCompatActivity() {
 
     private fun respondToProposal(proposalId: Long, accept: Boolean) {
         val uuid = guestUuid ?: return
+        // proposalId가 0이면 저장된 pendingProposalId로 대체
+        val actualProposalId = if (proposalId == 0L) pendingProposalId ?: run {
+            Toast.makeText(this, "제안 ID를 찾을 수 없습니다", Toast.LENGTH_SHORT).show()
+            return
+        } else proposalId
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.respondToProposal(
-                    uuid, chatRoomId, proposalId, ProposalRespondRequest(accept)
+                    uuid, chatRoomId, actualProposalId, ProposalRespondRequest(accept)
                 )
                 if (response.isSuccessful && response.body()?.success == true) {
                     val status = if (accept) "ACCEPTED" else "REJECTED"
                     // 기존 proposal 메시지의 상태 업데이트 (버튼 비활성화)
-                    val idx = messageList.indexOfLast {
-                        it.messageType == "PROPOSAL" && it.proposalId == proposalId
-                    }
+                    val idx = messageList.indexOfLast { it.messageType == "PROPOSAL" }
                     if (idx != -1) {
                         messageList[idx] = messageList[idx].copy(proposalStatus = status)
                         runOnUiThread { chatAdapter.notifyItemChanged(idx) }
                     }
+                    // 처리 완료 후 초기화
+                    pendingProposalId = null
+                    pendingProposalType = null
                     if (accept) {
                         val typeLabel = response.body()?.result?.proposalType
                             ?.let { if (it == "LOCKER") "사물함" else "대면" } ?: ""
