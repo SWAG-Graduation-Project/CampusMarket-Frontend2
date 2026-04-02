@@ -1,6 +1,8 @@
 package com.example.campusmarket
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,5 +30,13 @@ class MypageListActivity : AppCompatActivity() {
 
         recyclerView.adapter = PostAdapter(list)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener { startActivity(Intent(this, MarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener { startActivity(Intent(this, MyMarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener { startActivity(Intent(this, MypageActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener { startActivity(Intent(this, ChatListActivity::class.java)) }
     }
 }

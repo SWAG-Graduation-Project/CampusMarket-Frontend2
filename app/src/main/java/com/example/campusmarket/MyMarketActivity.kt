@@ -3,6 +3,7 @@ package com.example.campusmarket
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,23 +31,18 @@ class MyMarketActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerUserMarketPosts)
 
         val dummyList = listOf(
-            "상품 1",
-            "상품 2",
-            "상품 3",
-            "상품 4",
-            "상품 4",
-
-            "상품 4",
-
-            "상품 4",
-            "상품 4",
-            "상품 4",
-            "상품 4",
-
-
+            "까만 학잠",
             )
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = MarketAdapter(dummyList)
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener { startActivity(Intent(this, MarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener { startActivity(Intent(this, MyMarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener { startActivity(Intent(this, MypageActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener { startActivity(Intent(this, ChatListActivity::class.java)) }
     }
 }

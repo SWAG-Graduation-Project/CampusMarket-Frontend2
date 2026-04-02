@@ -226,6 +226,7 @@ class SellDetailActivity : AppCompatActivity() {
         setupChipButtons()
         setupButtons()
         renderImages(imageList)
+        setupBottomNavigation()
 
         if (tempImageIds.isNotEmpty()) {
             loadDraftData()
@@ -818,6 +819,13 @@ class SellDetailActivity : AppCompatActivity() {
                 Log.e("SELL_DETAIL", "image load error=$imageUrl", e)
             }
         }
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener { startActivity(Intent(this, MarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener { startActivity(Intent(this, MyMarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener { startActivity(Intent(this, MypageActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener { startActivity(Intent(this, ChatListActivity::class.java)) }
     }
 
     private fun dpToPx(dp: Int): Int {

@@ -54,6 +54,13 @@ class MarketListActivity : AppCompatActivity() {
 
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = MarketAdapter(dummyList)
+        setupBottomNavigation()
         }
 
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener { startActivity(Intent(this, MarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener { startActivity(Intent(this, MyMarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener { startActivity(Intent(this, MypageActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener { startActivity(Intent(this, ChatListActivity::class.java)) }
+    }
 }

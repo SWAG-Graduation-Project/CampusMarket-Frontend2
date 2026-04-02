@@ -1,11 +1,13 @@
 package com.example.campusmarket
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +77,14 @@ class RewriteProductActivity : AppCompatActivity() {
         btnDone.setOnClickListener {
             uploadAllSelectedImages()
         }
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener { startActivity(Intent(this, MarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener { startActivity(Intent(this, MyMarketActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener { startActivity(Intent(this, MypageActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener { startActivity(Intent(this, ChatListActivity::class.java)) }
     }
 
     private fun uploadAllSelectedImages() {

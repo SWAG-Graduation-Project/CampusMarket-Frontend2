@@ -337,6 +337,7 @@ class StartGetInfo : AppCompatActivity() {
 
                 if (guestUuid.isNullOrBlank()) {
                     Log.e("LOCKER_GET", "guestUuid 없음")
+                    tvLockerSelector.text = "사물함을 골라주세요"
                     return@launch
                 }
 
@@ -351,20 +352,32 @@ class StartGetInfo : AppCompatActivity() {
 
                     if (body != null && body.success && body.result != null) {
                         val result = body.result
-                        tvLockerSelector.text =
-                            "${result.building} ${result.floor}층 ${result.major} ${result.lockerGroup}그룹 ${result.row}행 ${result.col}열"
+
+                        if (
+                            result.building.isNullOrBlank() ||
+                            result.floor == null ||
+                            result.major.isNullOrBlank() ||
+                            result.lockerGroup == null ||
+                            result.row == null ||
+                            result.col == null
+                        ) {
+                            tvLockerSelector.text = "사물함을 골라주세요"
+                        } else {
+                            tvLockerSelector.text =
+                                "${result.building} ${result.floor}층 ${result.major} ${result.lockerGroup}그룹 ${result.row}행 ${result.col}열"
+                        }
                     } else {
-                        tvLockerSelector.text = "지도에서 사물함 위치를 선택하세요!"
+                        tvLockerSelector.text = "사물함을 골라주세요"
                     }
                 } else {
-                    tvLockerSelector.text = "지도에서 사물함 위치를 선택하세요!"
+                    tvLockerSelector.text = "사물함을 골라주세요"
                 }
             } catch (e: Exception) {
                 Log.e("LOCKER_GET", "조회 예외", e)
+                tvLockerSelector.text = "사물함을 골라주세요"
             }
         }
     }
-
     private fun saveLockerToServer(cell: LockerCellData) {
         lifecycleScope.launch {
             try {

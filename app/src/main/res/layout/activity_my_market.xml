@@ -6,53 +6,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/detailbackgruound"
-
-    android:layout_marginTop="20dp"
-    tools:context=".UserMarketActivity">
+    tools:context=".MyMarketActivity">
 
     <!-- 배경 이미지는 NavBar 위까지만 보이게 따로 분리 -->
 
     <!-- 상단 바 -->
 
 
-        <!--상단헤더-->
-        <LinearLayout
-            android:id="@+id/topBar"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_width="match_parent"
+    <!--상단헤더-->
+    <!-- 상단헤더 -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 헤더 백 버튼 -->
+        <Button
+            android:id="@+id/backbutton"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end" />
+
+        <!-- 제목 간판 -->
+        <TextView
+            android:id="@+id/tvStoreTitle"
+            android:layout_width="250dp"
             android:layout_height="60dp"
-            android:gravity="bottom">
-            <!--헤더 백 버튼-->
-            <Button
-                android:id="@+id/backbutton"
-                android:layout_width="50dp"
-                android:layout_height="45dp"
-
-                android:background="@android:color/transparent"
-
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:ellipsize="end"/>
-            <!--제목 간판 -->
-            <TextView
-                android:id="@+id/tvStoreTitle"
-                android:layout_width="250dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:background="#E6C7A0"
-                android:gravity="center"
-                android:text="수진이네 상점"
-                android:textColor="#3A2A1C"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:layout_marginStart="10dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"/>
-        </LinearLayout>
-
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="#E6C7A0"
+            android:gravity="center"
+            android:text="수진이네 상점"
+            android:textColor="#3A2A1C"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:ellipsize="end" />
+    </LinearLayout>
 
     <!-- 상점 정보 카드 -->
     <LinearLayout
@@ -60,7 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
@@ -101,21 +98,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 대표 이미지 -->
-    <ImageView
-        android:id="@+id/ivStoreBanner"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="50dp"
-        android:background="#D9D9D9"
-        android:contentDescription="상점 대표 이미지"
-        android:scaleType="centerCrop"
-        android:src="@drawable/tableimg"
-        app:layout_constraintTop_toBottomOf="@id/storeInfoCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <!-- 판매중 / 구매 완료 버튼 -->
     <LinearLayout
@@ -126,7 +109,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="50dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/ivStoreBanner"
+        app:layout_constraintTop_toBottomOf="@id/storeInfoCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -193,7 +176,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
 
-    <!-- 홈 -->
+        <!-- 홈 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

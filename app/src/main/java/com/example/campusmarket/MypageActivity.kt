@@ -114,6 +114,9 @@ class MypageActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener {
             startActivity(Intent(this, ChatListActivity::class.java))
         }
+        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener {
+            startActivity(Intent(this, MypageActivity::class.java))
+        }
     }
 
     private fun showNicknameEditDialog() {
