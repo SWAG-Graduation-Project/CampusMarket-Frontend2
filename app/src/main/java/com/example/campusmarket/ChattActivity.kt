@@ -162,11 +162,20 @@ class ChattActivity : AppCompatActivity() {
         if (metadata.isNullOrBlank()) return Triple(null, null, "PENDING")
         return try {
             val obj = gson.fromJson(metadata, JsonObject::class.java)
-            val id = if (obj.has("proposalId")) obj.get("proposalId").asLong else null
-            val type = if (obj.has("proposalType")) obj.get("proposalType").asString else null
-            val status = if (obj.has("proposalStatus")) obj.get("proposalStatus").asString else "PENDING"
+            // proposalId: 여러 키 이름 시도
+            val id = listOf("proposalId", "proposal_id", "id").firstNotNullOfOrNull { key ->
+                if (obj.has(key)) obj.get(key).asLong else null
+            }
+            val type = listOf("proposalType", "proposal_type", "type").firstNotNullOfOrNull { key ->
+                if (obj.has(key)) obj.get(key).asString else null
+            }
+            val status = listOf("proposalStatus", "proposal_status", "status").firstNotNullOfOrNull { key ->
+                if (obj.has(key)) obj.get(key).asString else null
+            } ?: "PENDING"
+            android.util.Log.d("PROPOSAL_PARSE", "meta=$metadata → id=$id type=$type status=$status")
             Triple(id, type, status)
         } catch (e: Exception) {
+            android.util.Log.e("PROPOSAL_PARSE", "parse error: ${e.message}, meta=$metadata")
             Triple(null, null, "PENDING")
         }
     }

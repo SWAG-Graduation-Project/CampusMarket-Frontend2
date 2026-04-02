@@ -118,10 +118,24 @@ class ChatMessageAdapter(
             btnReject.alpha = if (canRespond) 1f else 0.4f
 
             btnAccept.setOnClickListener {
-                if (canRespond) onProposalAccept?.invoke(item.proposalId ?: return@setOnClickListener)
+                if (!canRespond) return@setOnClickListener
+                val id = item.proposalId
+                if (id == null) {
+                    android.util.Log.e("PROPOSAL", "proposalId is null. metadata=${item.metadata}")
+                    android.widget.Toast.makeText(itemView.context, "제안 정보를 불러올 수 없습니다", android.widget.Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                onProposalAccept?.invoke(id)
             }
             btnReject.setOnClickListener {
-                if (canRespond) onProposalReject?.invoke(item.proposalId ?: return@setOnClickListener)
+                if (!canRespond) return@setOnClickListener
+                val id = item.proposalId
+                if (id == null) {
+                    android.util.Log.e("PROPOSAL", "proposalId is null. metadata=${item.metadata}")
+                    android.widget.Toast.makeText(itemView.context, "제안 정보를 불러올 수 없습니다", android.widget.Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                onProposalReject?.invoke(id)
             }
         }
     }
