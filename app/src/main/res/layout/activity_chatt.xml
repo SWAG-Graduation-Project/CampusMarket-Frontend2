@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChattActivity">
+
+    <!-- 배경 이미지 -->
+    <ImageView
+        android:id="@+id/ivChatBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/detailbackgruound" />
+
+    <!-- 전체 화면 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+<ImageView
+    android:id="@+id/burgerbar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/burger"
+    android:layout_marginTop="20dp"
+    android:layout_marginStart="350dp"
+    />
+
+        <!-- 하단 네비게이션 바 고정 -->
+        <LinearLayout
+            android:id="@+id/NavBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+
+            android:background="#FFFFFF"
+            android:weightSum="4">
+
+            <!-- 홈 -->
+            <LinearLayout
+                android:id="@+id/gohome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/homegray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="홈"
+                    android:textSize="10sp"
+                    android:textColor="#999999"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- 내상점 -->
+            <LinearLayout
+                android:id="@+id/goMymarket"
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icmymarket" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내 상점"
+                    android:textSize="10sp"
+                    android:textColor="#999999"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- 채팅 -->
+            <LinearLayout
+                android:id="@+id/gochat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/chat_brawn" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="채팅"
+                    android:textSize="10sp"
+                    android:textColor="#AF6330"/>
+            </LinearLayout>
+            <!-- MY -->
+            <LinearLayout
+                android:id="@+id/gomypage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_myinfo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MY"
+                    android:textSize="10sp"
+                    android:textColor="#999999"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <!-- ===================== -->
+        <!-- 입력창: 네비게이션 바로 위 고정 -->
+        <!-- ===================== -->
+        <LinearLayout
+            android:id="@+id/chatInputBar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_above="@id/NavBar"
+            android:layout_marginStart="43dp"
+            android:background="#1F1F1F"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginEnd="43dp"
+            android:layout_marginBottom="90dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+
+            <ImageButton
+                android:id="@+id/btndanger"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="첨부"
+                android:src="@drawable/danger"
+                app:tint="#BDBDBD"/>
+
+            <ImageButton
+                android:id="@+id/btnerror"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="신고"
+                android:src="@drawable/error"
+                app:tint="#BDBDBD"/>
+
+            <EditText
+                android:id="@+id/etMessage"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="메시지를 입력하세요"
+                android:textColorHint="#A0A0A0"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:paddingStart="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+
+                android:background="@drawable/bg_send_circle"
+                android:contentDescription="전송"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_media_next"
+                app:tint="#2B2B2B"
+              />
+        </LinearLayout>
+
+        <!-- ===================== -->
+        <!-- 빠른 제안 버튼들: 입력창 위 고정 -->
+        <!-- ===================== -->
+
+
+        <!-- 플로팅 버튼 전체 -->
+
+        <!-- 왼쪽/오른쪽 하단 원형 고정 버튼 -->
+
+        <!-- ===================== -->
+        <!-- 상단 고정 영역 -->
+        <!-- 날짜 윗부분은 전부 고정 -->
+        <!-- 상단 툴바 -->
+
+
+
+        <include
+            android:id="@+id/header"
+            layout="@layout/view_common_header" />
+        <!-- ===================== -->
+        <LinearLayout
+            android:id="@+id/fixedTopArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginStart="45dp"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/tvNotice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#C8C2C2"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
+                android:text="덕성 장터는 짧은 단순 이벤트성 서비스입니다. 외부 메시지 유도나 신원 요구는 사기일 수 있습니다. 당사자 간 합의로 인한 피해는 책임지지 않습니다."
+                android:textColor="#5C5C5C"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:id="@+id/productInfoCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_product_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/ivProductThumb"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_gray_post_image"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="상품 이름 상품 이름상품 이름"
+                        android:textColor="#111111"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCardDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="07.21"
+                        android:textColor="#7A7A7A"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="3,000원"
+                        android:textColor="#111111"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_gravity="bottom"
+
+                    android:id="@+id/btnGoProduct"
+                    android:layout_width="78dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_black_round_button"
+                    android:text="바로가기"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical">
+
+                <!-- 날짜 텍스트 -->
+                <TextView
+                    android:id="@+id/tvDateDivider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="26.07.21"
+                    android:textColor="#222222"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:paddingStart="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp" />
+
+                <!-- 가로선 -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="#222222" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ===================== -->
+        <!-- 채팅 스크롤 영역 -->
+        <!-- 고정 상단 아래 ~ 고정 하단 위 -->
+        <!-- ===================== -->
+        <FrameLayout
+            android:id="@+id/chatContentArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/fixedTopArea"
+            android:layout_above="@id/chatInputBar"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="45dp">
+
+            <!-- 실제 채팅 리스트 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerChatMessages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="40dp"
+                android:scrollbars="none" />
+
+            <!-- 갈색 버튼 레이어 -->
+            <FrameLayout
+                android:id="@+id/fabContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false">
+
+                <!-- 왼쪽 버튼 묶음 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|bottom"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="13dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/layoutQuickActions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/btnSuggestDelivery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_quick_action"
+                            android:padding="10dp"
+                            android:text="사물함 거래 제안하기"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/btnSuggestDirect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_quick_action"
+                            android:padding="10dp"
+                            android:text="대면 거래 제안하기"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/btnFabMain"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/bg_brown_circle"
+                        android:padding="10dp"
+                        android:src="@drawable/arrowup"
+                        app:tint="#FFFFFF" />
+
+                    <ImageButton
+                        android:id="@+id/btnCheck"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_brown_circle"
+                        android:src="@drawable/check" />
+                </LinearLayout>
+
+                <!-- 오른쪽 아래 버튼 -->
+                <ImageButton
+                    android:id="@+id/btnDown"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="13dp"
+                    android:background="@drawable/bg_brown_circle"
+                    android:src="@drawable/icdown" />
+
+            </FrameLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/view_chat_setting_panel" />
+</FrameLayout>

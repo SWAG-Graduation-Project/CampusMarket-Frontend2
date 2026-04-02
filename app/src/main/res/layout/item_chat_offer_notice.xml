@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#D9D9D9"
+    android:paddingTop="8dp"
+    android:gravity="center_horizontal"
+    android:paddingBottom="8dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp">
+
+    <TextView
+        android:id="@+id/tvOfferNotice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="판매자가 거래를 제안했습니다\n(시간과 장소를 봐주세요)"
+        android:textColor="#222222"
+        android:textAlignment="center"
+        android:textSize="11sp"
+        android:lineSpacingExtra="2dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnOfferAccept"
+            android:layout_width="34dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_black_round_button_small"
+            android:contentDescription="수락"
+            android:padding="4dp"
+            android:src="@drawable/check" />
+
+        <ImageButton
+            android:id="@+id/btnOfferReject"
+            android:layout_width="34dp"
+            android:layout_height="22dp"
+            android:background="@drawable/bg_gray_round_small"
+            android:contentDescription="거절"
+            android:padding="4dp"
+            android:src="@drawable/x" />
+    </LinearLayout>
+
+</LinearLayout>

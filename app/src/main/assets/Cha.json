@@ -1,0 +1,275 @@
+{
+  "building": "차관",
+  "floors": [
+    {
+      "floor": 1,
+      "majors": [
+        {
+          "major": "경영",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 9
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 6
+            },
+            {
+              "group": 4,
+              "rows": 4,
+              "cols": 6
+            },
+            {
+              "group": 5,
+              "rows": 4,
+              "cols": 9
+            },
+            {
+              "group": 6,
+              "rows": 4,
+              "cols": 18
+            }
+          ]
+        },
+        {
+          "major": "중어중문",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 15
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 18
+            }
+          ]
+        },
+        {
+          "major": "미상",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 6
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 3
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 2,
+      "majors": [
+        {
+          "major": "법학과",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 18
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 4,
+              "rows": 4,
+              "cols": 15
+            }
+          ]
+        },
+        {
+          "major": "국제통상학과",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 15
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 4,
+              "rows": 4,
+              "cols": 15
+            }
+          ]
+        },
+        {
+          "major": "AI신약학과",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 12
+            }
+          ]
+        },
+        {
+          "major": "회계학과",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 12
+            },
+            {
+              "group": 2,
+              "rows": 4,
+              "cols": 3
+            },
+            {
+              "group": 3,
+              "rows": 4,
+              "cols": 27
+            },
+            {
+              "group": 4,
+              "rows": 4,
+              "cols": 15
+            }
+          ]
+        },
+        {
+          "major": "글로벌융합대학",
+          "groups": [
+            {
+              "group": 1,
+              "rows": 4,
+              "cols": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 3,
+      "majors": [
+        {
+          "major": "사이버보안 전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "컴퓨터공학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 15 },
+            { "group": 2, "rows": 4, "cols": 15 },
+            { "group": 3, "rows": 4, "cols": 15 },
+            { "group": 4, "rows": 4, "cols": 6 }
+          ]
+        },
+        {
+          "major": "자유전공학부",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 33 },
+            { "group": 2, "rows": 4, "cols": 33 },
+            { "group": 3, "rows": 4, "cols": 9 }
+          ]
+        },
+        {
+          "major": "미상",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "소프트웨어 전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 3 }
+          ]
+        },
+        {
+          "major": "IT미디어공학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 6 },
+            { "group": 3, "rows": 4, "cols": 9 }
+          ]
+        },
+        {
+          "major": "가상현실융합과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 4,
+      "majors": [
+        {
+          "major": "수학전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 30 },
+            { "group": 2, "rows": 4, "cols": 6 },
+            { "group": 3, "rows": 4, "cols": 9 },
+            { "group": 4, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "디지털소프트웨어공학부",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 3 },
+            { "group": 2, "rows": 4, "cols": 6 },
+            { "group": 3, "rows": 4, "cols": 12 },
+            { "group": 4, "rows": 4, "cols": 15 }
+          ]
+        },
+        {
+          "major": "학생회",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 6 }
+          ]
+        },
+        {
+          "major": "정보통계학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 24 }
+          ]
+        }
+      ]
+    }
+  ]
+}

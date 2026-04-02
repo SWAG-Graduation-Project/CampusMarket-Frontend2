@@ -1,0 +1,148 @@
+{
+  "building": "인문대",
+  "floors": [
+    {
+      "floor": 1,
+      "majors": [
+        {
+          "major": "사회복지학 전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 18 },
+            { "group": 3, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "글로벌융합대학",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "사회학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "아동가족학전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 18 },
+            { "group": 3, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "중어중문전공",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 15 },
+            { "group": 2, "rows": 4, "cols": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 2,
+      "majors": [
+        {
+          "major": "문헌정보학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 },
+            { "group": 2, "rows": 4, "cols": 12 },
+            { "group": 3, "rows": 4, "cols": 9 },
+            { "group": 4, "rows": 4, "cols": 9 }
+          ]
+        },
+        {
+          "major": "문화인류학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 6 },
+            { "group": 2, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "심리학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 6 },
+            { "group": 2, "rows": 4, "cols": 15 },
+            { "group": 3, "rows": 4, "cols": 15 },
+            { "group": 4, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "철학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 9 }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 3,
+      "majors": [
+        {
+          "major": "국어국문학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 },
+            { "group": 2, "rows": 4, "cols": 15 },
+            { "group": 3, "rows": 4, "cols": 15 }
+          ]
+        },
+        {
+          "major": "불어불문학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 },
+            { "group": 2, "rows": 4, "cols": 3 }
+          ]
+        },
+        {
+          "major": "정치외교학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 },
+            { "group": 2, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "스페인어학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "일어일문학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 12 },
+            { "group": 2, "rows": 4, "cols": 18 }
+          ]
+        },
+        {
+          "major": "독어독문학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 15 }
+          ]
+        },
+        {
+          "major": "미술사학과",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 3 },
+            { "group": 2, "rows": 4, "cols": 18 },
+            { "group": 3, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "철학과",
+          "groups": [
+            { "group": 2, "rows": 4, "cols": 12 }
+          ]
+        },
+        {
+          "major": "미상",
+          "groups": [
+            { "group": 1, "rows": 4, "cols": 18 }
+          ]
+        }
+      ]
+    }
+  ]
+}

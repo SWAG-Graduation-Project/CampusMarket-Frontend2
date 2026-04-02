@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp"
+    android:layout_marginHorizontal="40dp"
+
+    android:background="@drawable/bg_floor_dialog">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="floor를 선택하세요"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbFloor1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1층"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:buttonTint="#4A90D9"
+            android:checked="true"
+            android:layout_marginBottom="10dp" />
+
+        <RadioButton
+            android:id="@+id/rbFloor2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2층"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:buttonTint="#4A90D9"
+            android:layout_marginBottom="10dp" />
+
+        <RadioButton
+            android:id="@+id/rbFloor3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3층"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:buttonTint="#4A90D9"
+            android:layout_marginBottom="10dp" />
+
+        <RadioButton
+            android:id="@+id/rbFloor4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4층"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:buttonTint="#4A90D9" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnMove"
+        android:layout_width="144dp"
+        android:layout_height="58dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="28dp"
+        android:text="이동하기"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:background="@drawable/bg_move_button" />
+
+</LinearLayout>

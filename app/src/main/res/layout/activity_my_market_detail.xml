@@ -1,0 +1,313 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".MyMarketDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<!--배경 이미지-->
+        <ImageView
+            android:id="@+id/ivPopupBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/detailbackgruound" />
+    <!--상단헤더-->
+    <LinearLayout
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="bottom">
+        <!--헤더 백 버튼-->
+        <Button
+            android:id="@+id/backbutton"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+
+            android:background="@android:color/transparent"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:ellipsize="end"/>
+        <!--제목 간판 -->
+        <TextView
+            android:id="@+id/tvStoreTitle"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#E6C7A0"
+            android:gravity="center"
+            android:text="내 상점"
+            android:textColor="#3A2A1C"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"/>
+    </LinearLayout>
+
+    <!--본내용-->
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="35dp"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="70dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp">
+
+
+            <ImageView
+                android:id="@+id/ivProduct"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+
+                android:layout_marginTop="30dp"
+                android:background="#D9D4CE"
+                android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:minHeight="60dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="10dp">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toStartOf="@+id/tvDate"
+                    android:layout_marginEnd="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="상품 이름 상품 이름상품 이름 상품 이름상품 이름 상품 이름"
+                    android:textColor="#3A2A1C"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+<!-- 여기 제목 최대 몇글자 24글자로 지정해 줘야할듯-->
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:text="07.21"
+                    android:textColor="#7E746B"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="15,000원"
+                android:textColor="#8B4B1F"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/tagContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tagCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_tag_gray"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="가방"
+                    android:textColor="#5F5A56"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tagState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_tag_green"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="양호"
+                    android:textColor="#4B6B4C"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tagColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_tag_brown"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="갈색"
+                    android:textColor="#5A3A28"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="40dp"
+                >
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="aㅁㄴㄹ앙ㅁ니ㅓ라이머라ㅣㄴㅁ어라이ㅓ닐마어ㅏㄴ머ㅣㄹ아ㅣㅁ너라이ㅓㄹ마ㅣ너아ㅣㄹ머나ㅣ어라미넝라ㅣ러마이런마ㅣ러아니머라임너라ㅣㅇ넘라ㅣㅇ머나리ㅓㅇ나ㅣㅁㄴㄹ어ㅏ머라인머라이너마리어나미러아니멀아ㅣㄴ멀아ㅣ널ㄴ민아ㅓ라민어라ㅣ먼아ㅣㅓㄹ마ㅣ너아리ㅓㅁ나어람니ㅓㄹ아ㅣㄴ머란이ㅓ라민어라ㅣㄴㅁ러ㅏㅇ니ㅓ라미널아ㅣ머라이먼라ㅣㅁ너라언마ㅣㅓㅁㄴ오러ㅏㅁ노러ㅏ온머ㅏㄹ온머ㅏ로어ㅏㄴㅁ로어ㅏㄴ몰ㄴ어ㅏㅗ러마농러ㅏㅗㅁㄴ어라ㅗㄴ어마로어ㅏㄴ몰어나몰ㅇ너ㅏ모렁나모러아몬런아ㅗㅁ러안모러아ㅗㅁ러ㅏㄹ아ㅣㄴ멀멀아미너라ㅣㅁ널아ㅣㅁㄹ너나ㅣ탈취 청소와 전자기기 관리에 최적화된 초미세 면봉입니다...asdfsajfㅁㄴㄹ어ㅏㅣㅁ러아님ㄹ;ㅓㄴ머ㅏ링;ㅓ마리ㅓ아ㅣㅁㄴ;ㅓㄹ나이ㅓㅁ라ㅣ언마ㅣㄹ;어나미러아ㅣㅁㄴ;ㅓㄹ아니ㅓㅁ라이너;마리ㅓ아ㅣㄴ멀아님;ㅓ라이머라니어란어ㅏㄹ알어라어라어라언미;ㄴㄹ아ㅣㅁ;ㅏㄴ이머ㅏ인;ㅓㅁ라ㅣㄴㅇ;ㅓ나미ㅓㄹㄴ아ㅣㅁ;ㅓㄹ아ㅣ;ㅁ너ㅏ일;ㅓ마닐어ㅏ님;ㅓ란이;ㅓ라민;ㅓ아ㅣ;러마너;이라ㅓㅁ나일;ㅓ마ㅣㄴ어라ㅣㅁ넝ㄴ;ㅣ리마너라ㅣㅁ;니아ㅓ라미;니아러마ㅣㄴ;이라ㅓㅁ니;ㅇ라머ㅣ나얼;ㅣㅏㅁ"
+                    android:textColor="#4B4036"
+                    android:textSize="12sp" />
+
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/bottomButtonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="80dp"
+                android:gravity="center"
+
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/change_finish"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_popup_btn_light"
+                    android:text="판매 완료로 바꾸기"
+                    android:textColor="#3A2A1C"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/Rewrite"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_popup_btn_light"
+                    android:text="수정하기"
+                    android:textColor="#3A2A1C"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+    <!-- 하단 네비게이션 바 고정 -->
+    <LinearLayout
+        android:id="@+id/NavBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:weightSum="4">
+
+        <!-- 홈 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ichome" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="홈"
+                android:textSize="10sp"
+                android:textColor="#AF6330"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <!-- 채팅 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icmymarket" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 상점"
+                android:textSize="10sp"
+                android:textColor="#999999"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <!-- 채팅 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icchat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="채팅"
+                android:textSize="10sp"
+                android:textColor="#999999"/>
+        </LinearLayout>
+
+        <!-- MY -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_myinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY"
+                android:textSize="10sp"
+                android:textColor="#999999"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    </FrameLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatSettingOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <!-- 바깥 반투명 배경 -->
+    <View
+        android:id="@+id/settingDim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000" />
+
+    <!-- 오른쪽에서 나오는 패널 -->
+    <LinearLayout
+        android:id="@+id/chatSettingPanel"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="#D9D9D9"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/btnCloseSetting"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:src="@drawable/x"
+            android:contentDescription="닫기" />
+
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300dp"
+            android:background="@drawable/bg_white_round_button"
+            android:text="신고하기"
+            android:textAllCaps="false"
+            android:textColor="#222222"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnLeaveChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_white_round_button"
+            android:text="채팅방 나가기"
+            android:textAllCaps="false"
+            android:textColor="#222222"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

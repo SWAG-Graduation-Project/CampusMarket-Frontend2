@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_white_round_dialog"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="판매 완료로\n변경하시겠습니까?"
+        android:textColor="#222222"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_gray_round_button"
+            android:text="변경하기"
+            android:textColor="#222222"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_gray_round_button"
+            android:text="취소"
+            android:textColor="#222222"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+</LinearLayout>

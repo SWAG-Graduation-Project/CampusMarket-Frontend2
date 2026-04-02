@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ChatListActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 배경 이미지 -->
+    <ImageView
+        android:id="@+id/ivPopupBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/detailbackgruound" />
+
+    <!-- 전체 UI를 위에 올리는 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="bottom">
+            <!--헤더 백 버튼-->
+            <Button
+                android:id="@+id/backbutton"
+                android:layout_width="50dp"
+                android:layout_height="45dp"
+
+                android:background="@android:color/transparent"
+
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:ellipsize="end"/>
+            <!--제목 간판 -->
+            <TextView
+                android:id="@+id/tvStoreTitle"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#E6C7A0"
+                android:gravity="center"
+                android:text="수진이네 상점"
+                android:textColor="#3A2A1C"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"/>
+        </LinearLayout>
+
+        <!-- 상단 탭 영역 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:id="@+id/tvSell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="판매"
+                android:textColor="#2B2B2B"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="|"
+                android:textColor="#8A8A8A"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvBuy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="구매"
+                android:textColor="#8A8A8A"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 게시판 들어가는 영역 + 스크롤 가능 -->
+        <!-- 아래 영역은 하단 네비게이션 바 자리를 고려해서 marginBottom/paddingBottom을 줌 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+
+           android:layout_marginBottom="150dp" />
+    </LinearLayout>
+
+    <!-- 하단 네비게이션 바 고정 -->
+    <LinearLayout
+        android:id="@+id/NavBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:weightSum="4">
+
+        <!-- 홈 -->
+        <LinearLayout
+            android:id="@+id/gohome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/homegray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="홈"
+                android:textSize="10sp"
+                android:textColor="#999999"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <!-- 내상점 -->
+        <LinearLayout
+            android:id="@+id/goMymarket"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icmymarket" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 상점"
+                android:textSize="10sp"
+                android:textColor="#999999"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <!-- 채팅 -->
+        <LinearLayout
+            android:id="@+id/gochat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/chat_brawn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="채팅"
+                android:textSize="10sp"
+                android:textColor="#AF6330"/>
+        </LinearLayout>
+        <!-- MY -->
+        <LinearLayout
+            android:id="@+id/gomypage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_myinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY"
+                android:textSize="10sp"
+                android:textColor="#999999"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

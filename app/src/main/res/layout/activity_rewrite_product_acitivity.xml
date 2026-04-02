@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RewriteProductActivity">
+
+    <!-- 배경 이미지 -->
+    <ImageView
+        android:id="@+id/ivPopupBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/detailbackgruound" />
+
+    <!-- 본문 전체 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="70dp">
+
+        <!-- 상단 헤더 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/backbutton"
+                android:layout_width="50dp"
+                android:layout_height="45dp"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/tvStoreTitle"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:background="#E6C7A0"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="수진이네 상점"
+                android:textColor="#3A2A1C"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 본문 영역 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="12dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="20dp"
+            >
+
+            <!-- AI 배경 제거 버튼 -->
+            <Button
+                android:id="@+id/btnAiRemove"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end"
+                android:background="@drawable/bg_black_round_button_small"
+                android:text="AI 배경 제거"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold" />
+
+            <!-- 이미지 영역 -->
+            <HorizontalScrollView
+                android:id="@+id/photoScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/photoContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:id="@+id/slot1"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_photo_upload_box"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/slot2"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_photo_upload_box"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/slot3"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_photo_upload_box"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/slot4"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_photo_upload_box"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/slot5"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_photo_upload_box"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ivPhoto5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- 사진 배경 자동 제거하기 -->
+            <Button
+                android:id="@+id/btnDone"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_black_round_button_small"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="사진 배경 자동 제거하기"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- 스크롤 폼 영역 -->
+            <ScrollView
+                android:id="@+id/formScroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="20dp"
+                    android:orientation="vertical">
+
+                    <!-- 카테고리 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="카테고리"
+                        android:textColor="#111111"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnCategoryEtc"
+                            android:layout_width="60dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_gray"
+                            android:text="기타"
+                            android:textAllCaps="false"
+                            android:textColor="#111111"
+                            android:textSize="11sp" />
+
+                        <Button
+                            android:id="@+id/btnCategoryClothes"
+                            android:layout_width="60dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_green"
+                            android:text="의류"
+                            android:textAllCaps="false"
+                            android:textColor="#111111"
+                            android:textSize="11sp" />
+
+                        <Button
+                            android:id="@+id/btnCategoryLocker"
+                            android:layout_width="60dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/bg_category_yellow"
+                            android:text="노랑"
+                            android:textAllCaps="false"
+                            android:textColor="#111111"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <!-- 제목 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="제목"
+                        android:textColor="#111111"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_edittext_box"
+                        android:hint="제목을 입력해주세요"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#9A9A9A"
+                        android:textSize="12sp" />
+
+                    <!-- 가격 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="가격"
+                        android:textColor="#111111"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnPriceDirect"
+                            android:layout_width="50dp"
+                            android:layout_height="26dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_price_black"
+                            android:text="판매"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10sp" />
+
+                        <Button
+                            android:id="@+id/btnPriceShare"
+                            android:layout_width="50dp"
+                            android:layout_height="26dp"
+                            android:background="@drawable/bg_price_gray"
+                            android:text="나눔"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/etPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_edittext_box"
+                        android:hint="가격을 입력해주세요"
+                        android:inputType="number"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#9A9A9A"
+                        android:textSize="12sp" />
+
+                    <!-- 상품 설명 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="상품 설명"
+                        android:textColor="#111111"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_edittext_box"
+                        android:gravity="top|start"
+                        android:hint="상품 설명을 입력해주세요"
+                        android:inputType="textMultiLine"
+                        android:padding="10dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#555555"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- 버튼 2개 묶는 컨테이너 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- 버튼 1 -->
+                <Button
+                    android:id="@+id/btnSell"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_gray_round_button"
+                    android:text="삭제하기"
+                    android:textAllCaps="false"
+                    android:textColor="#111111"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- 버튼 2 -->
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_gray_round_button"
+                    android:text="수정하기"
+                    android:textAllCaps="false"
+                    android:textColor="#111111"
+                    android:layout_marginEnd="30dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 하단 네비게이션 바 -->
+    <LinearLayout
+        android:id="@+id/NavBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <!-- 홈 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ichome" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="홈"
+                android:textColor="#AF6330"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 내 상점 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icmymarket" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 상점"
+                android:textColor="#999999"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 채팅 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icchat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="채팅"
+                android:textColor="#999999"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- MY -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_myinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY"
+                android:textColor="#999999"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 그림자 느낌 -->
+    <item android:top="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#8A4F22" />
+        </shape>
+    </item>
+
+    <!-- 메인 판자 -->
+    <item android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <gradient
+                android:angle="90"
+                android:startColor="#C88445"
+                android:centerColor="#B56E32"
+                android:endColor="#8F5225" />
+
+            <stroke
+                android:width="1.5dp"
+                android:color="#7A431A" />
+
+            <padding
+                android:left="5dp"
+                android:top="5dp"
+               />
+        </shape>
+    </item>
+
+</layer-list>

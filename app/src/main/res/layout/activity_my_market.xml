@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/detailbackgruound"
+
+    android:layout_marginTop="20dp"
+    tools:context=".UserMarketActivity">
+
+    <!-- 배경 이미지는 NavBar 위까지만 보이게 따로 분리 -->
+
+    <!-- 상단 바 -->
+
+
+        <!--상단헤더-->
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="bottom">
+            <!--헤더 백 버튼-->
+            <Button
+                android:id="@+id/backbutton"
+                android:layout_width="50dp"
+                android:layout_height="45dp"
+
+                android:background="@android:color/transparent"
+
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:ellipsize="end"/>
+            <!--제목 간판 -->
+            <TextView
+                android:id="@+id/tvStoreTitle"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#E6C7A0"
+                android:gravity="center"
+                android:text="수진이네 상점"
+                android:textColor="#3A2A1C"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"/>
+        </LinearLayout>
+
+
+    <!-- 상점 정보 카드 -->
+    <LinearLayout
+        android:id="@+id/storeInfoCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="14dp"
+        android:background="@drawable/bg_store_info_card"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <View
+            android:id="@+id/profileCircle"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_profile_circle" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvOpenDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상점 시작 날짜: 2026. 03. 02"
+                android:textColor="#222222"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTradeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="거래 횟수: 999 번"
+                android:textColor="#222222"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 대표 이미지 -->
+    <ImageView
+        android:id="@+id/ivStoreBanner"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="50dp"
+        android:background="#D9D9D9"
+        android:contentDescription="상점 대표 이미지"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tableimg"
+        app:layout_constraintTop_toBottomOf="@id/storeInfoCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 판매중 / 구매 완료 버튼 -->
+    <LinearLayout
+        android:id="@+id/buttonGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ivStoreBanner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btn_selling"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="판매중"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#000000" />
+
+        <Button
+            android:id="@+id/btn_completed"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="구매 완료"
+            android:textColor="#999999"
+            android:backgroundTint="#EEEEEE" />
+    </LinearLayout>
+
+    <!-- 판매하기 버튼 -->
+    <Button
+        android:id="@+id/btn_sell"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="16dp"
+        android:text="판매하기"
+        android:textColor="@android:color/black"
+        android:backgroundTint="#EEEEEE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/NavBar" />
+
+    <!-- 게시글 리스트 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerUserMarketPosts"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="40dp"
+        android:clipToPadding="false"
+        android:paddingEnd="6dp"
+        app:layout_constraintTop_toBottomOf="@id/buttonGroup"
+        app:layout_constraintBottom_toTopOf="@id/btn_sell"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_user_market_post" />
+
+    <!-- 하단 네비게이션 바 -->
+    <LinearLayout
+        android:id="@+id/NavBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+    <!-- 홈 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ichome" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="홈"
+                android:textSize="10sp"
+                android:textColor="#AF6330"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 내 상점 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icmymarket" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 상점"
+                android:textSize="10sp"
+                android:textColor="#999999"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 채팅 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icchat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="채팅"
+                android:textSize="10sp"
+                android:textColor="#999999" />
+        </LinearLayout>
+
+        <!-- MY -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_myinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY"
+                android:textSize="10sp"
+                android:textColor="#999999" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
