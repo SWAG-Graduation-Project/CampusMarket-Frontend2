@@ -131,10 +131,18 @@ class ChattActivity : AppCompatActivity() {
         val time = formatTime(dto.createdAt)
         val type = dto.messageType ?: "TEXT"
 
-        // PROPOSAL 메시지: metadata에서 proposalId/proposalType/proposalStatus 파싱
-        if (type == "PROPOSAL" || type.endsWith("_PROPOSAL")) {
+        // PROPOSAL 감지: messageType 이름 or metadata에 proposalId/proposalType 포함 여부로 판단
+        val isProposal = type.contains("PROPOSAL", ignoreCase = true) ||
+            (!dto.metadata.isNullOrBlank() && (
+                dto.metadata.contains("proposalId", ignoreCase = true) ||
+                dto.metadata.contains("proposalType", ignoreCase = true)
+            ))
+
+        android.util.Log.d("MSG_TYPE", "messageType=$type isProposal=$isProposal metadata=${dto.metadata}")
+
+        if (isProposal) {
             val (proposalId, proposalType, proposalStatus) = parseProposalMeta(dto.metadata)
-            android.util.Log.d("PROPOSAL", "type=$type metadata=${dto.metadata} proposalId=$proposalId proposalType=$proposalType proposalStatus=$proposalStatus")
+            android.util.Log.d("PROPOSAL", "proposalId=$proposalId proposalType=$proposalType proposalStatus=$proposalStatus")
             return ChatMessage(
                 senderName = senderName,
                 message = dto.content ?: "",
@@ -219,15 +227,18 @@ class ChattActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                android.util.Log.d("PROPOSAL", "sending proposal: type=$proposalType chatRoomId=$chatRoomId")
                 val response = RetrofitClient.apiService.createProposal(
                     uuid, chatRoomId, ProposalRequest(proposalType)
                 )
+                android.util.Log.d("PROPOSAL", "response code=${response.code()} body=${response.body()} error=${response.errorBody()?.string()}")
                 if (!response.isSuccessful || response.body()?.success != true) {
-                    Toast.makeText(this@ChattActivity, "제안 전송 실패", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ChattActivity, "제안 전송 실패 (${response.code()})", Toast.LENGTH_SHORT).show()
                 }
                 // 성공 시 WebSocket으로 메시지가 push됨 → onMessage에서 자동 처리
             } catch (e: Exception) {
-                Toast.makeText(this@ChattActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                android.util.Log.e("PROPOSAL", "exception: ${e.message}", e)
+                Toast.makeText(this@ChattActivity, "네트워크 오류: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
