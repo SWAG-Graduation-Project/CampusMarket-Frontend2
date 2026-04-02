@@ -108,19 +108,20 @@ class ChatMessageAdapter(
             val typeLabel = if (item.proposalType == "LOCKER") "사물함" else "대면"
             tvNotice.text = "판매자가 $typeLabel 거래를 제안했습니다"
 
-            val isPending = item.proposalStatus == "PENDING"
-            // 판매자는 수락/거절 불가, 구매자만 가능, PENDING 상태일 때만 활성화
-            val canRespond = !isSeller && isPending
+            // null은 PENDING으로 간주, ACCEPTED/REJECTED일 때만 비활성화
+            val isResolved = item.proposalStatus == "ACCEPTED" || item.proposalStatus == "REJECTED"
+            // 판매자는 수락/거절 불가, 구매자만 가능
+            val canRespond = !isSeller && !isResolved
             btnAccept.isEnabled = canRespond
             btnReject.isEnabled = canRespond
             btnAccept.alpha = if (canRespond) 1f else 0.4f
             btnReject.alpha = if (canRespond) 1f else 0.4f
 
             btnAccept.setOnClickListener {
-                item.proposalId?.let { id -> onProposalAccept?.invoke(id) }
+                if (canRespond) onProposalAccept?.invoke(item.proposalId ?: return@setOnClickListener)
             }
             btnReject.setOnClickListener {
-                item.proposalId?.let { id -> onProposalReject?.invoke(id) }
+                if (canRespond) onProposalReject?.invoke(item.proposalId ?: return@setOnClickListener)
             }
         }
     }

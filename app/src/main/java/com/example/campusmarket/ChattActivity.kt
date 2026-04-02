@@ -134,6 +134,7 @@ class ChattActivity : AppCompatActivity() {
         // PROPOSAL 메시지: metadata에서 proposalId/proposalType/proposalStatus 파싱
         if (type == "PROPOSAL" || type.endsWith("_PROPOSAL")) {
             val (proposalId, proposalType, proposalStatus) = parseProposalMeta(dto.metadata)
+            android.util.Log.d("PROPOSAL", "type=$type metadata=${dto.metadata} proposalId=$proposalId proposalType=$proposalType proposalStatus=$proposalStatus")
             return ChatMessage(
                 senderName = senderName,
                 message = dto.content ?: "",
@@ -142,7 +143,7 @@ class ChattActivity : AppCompatActivity() {
                 messageType = "PROPOSAL",
                 proposalId = proposalId,
                 proposalType = proposalType,
-                proposalStatus = proposalStatus,
+                proposalStatus = proposalStatus ?: "PENDING",
                 metadata = dto.metadata
             )
         }
@@ -178,6 +179,7 @@ class ChattActivity : AppCompatActivity() {
         }
 
         stompManager?.onMessage = { json ->
+            android.util.Log.d("WS_RAW", "received: $json")
             try {
                 val dto = gson.fromJson(json, ChatReceiveDto::class.java)
                 val msg = dtoToChatMessage(dto)
