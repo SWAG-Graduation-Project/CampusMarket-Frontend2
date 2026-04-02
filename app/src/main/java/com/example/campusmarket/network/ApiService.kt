@@ -17,8 +17,8 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -70,7 +70,7 @@ interface ApiService {
         @Path("chatRoomId") chatRoomId: Long
     ): Response<ProposalListResponse>
 
-    @PUT("chat/rooms/{chatRoomId}/proposals/{proposalId}")
+    @PATCH("chat/rooms/{chatRoomId}/proposals/{proposalId}")
     suspend fun respondToProposal(
         @Header("guestUuid") guestUuid: String,
         @Path("chatRoomId") chatRoomId: Long,

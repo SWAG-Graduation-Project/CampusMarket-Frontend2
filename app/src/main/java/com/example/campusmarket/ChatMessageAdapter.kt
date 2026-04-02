@@ -11,7 +11,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.campusmarket.data.model.FreeSlot
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -38,6 +37,7 @@ class ChatMessageAdapter(
         return when (item.messageType) {
             "PROPOSAL", "LOCKER_PROPOSAL", "FACE_TO_FACE_PROPOSAL" -> TYPE_OFFER_NOTICE
             "TIMETABLE_SHARE" -> if (item.isMine) TYPE_IMAGE_ME else TYPE_IMAGE_OTHER
+            "LOCKER_SHARE" -> if (item.isMine) TYPE_ME else TYPE_OTHER
             "SYSTEM" -> {
                 if (!item.metadata.isNullOrBlank() && item.metadata.contains("freeSlots"))
                     TYPE_FREE_SLOTS
@@ -148,17 +148,18 @@ class ChatMessageAdapter(
         }
     }
 
-    // ── TIMETABLE_SHARE: 내가 보낸 이미지 ──
+    // ── TIMETABLE_SHARE: 내가 보낸 시간표 ──
     inner class ImageMeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivImage: ImageView = itemView.findViewById(R.id.ivMyImage)
         private val tvTime: TextView = itemView.findViewById(R.id.tvMyImageTime)
         fun bind(item: ChatMessage) {
             tvTime.text = item.time
-            Glide.with(ivImage.context).load(item.message).into(ivImage)
+            val slots = parseClasses(item.metadata)
+            ivImage.setImageBitmap(drawTimetableBitmap(ivImage, slots, Color.parseColor("#64B5F6")))
         }
     }
 
-    // ── TIMETABLE_SHARE: 상대방이 보낸 이미지 ──
+    // ── TIMETABLE_SHARE: 상대방이 보낸 시간표 ──
     inner class ImageOtherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivImage: ImageView = itemView.findViewById(R.id.ivOtherImage)
         private val tvSender: TextView = itemView.findViewById(R.id.tvOtherImageSenderName)
@@ -166,7 +167,8 @@ class ChatMessageAdapter(
         fun bind(item: ChatMessage) {
             tvSender.text = item.senderName
             tvTime.text = item.time
-            Glide.with(ivImage.context).load(item.message).into(ivImage)
+            val slots = parseClasses(item.metadata)
+            ivImage.setImageBitmap(drawTimetableBitmap(ivImage, slots, Color.parseColor("#64B5F6")))
         }
     }
 
@@ -176,8 +178,7 @@ class ChatMessageAdapter(
 
         fun bind(item: ChatMessage) {
             val slots = parseFreeSlots(item.metadata)
-            val bitmap = drawTimetable(slots)
-            ivTimetable.setImageBitmap(bitmap)
+            ivTimetable.setImageBitmap(drawTimetableBitmap(ivTimetable, slots, Color.parseColor("#81C784")))
         }
 
         private fun parseFreeSlots(metadata: String?): List<FreeSlot> {
@@ -197,81 +198,101 @@ class ChatMessageAdapter(
                 emptyList()
             }
         }
+    }
 
-        private fun drawTimetable(slots: List<FreeSlot>): Bitmap {
-            val density = ivTimetable.context.resources.displayMetrics.density
-            val dayLabels = listOf("월", "화", "수", "목", "금", "토", "일")
-            val startHour = 9
-            val endHour = 24
-            val hours = endHour - startHour
-
-            val labelW = (36 * density).toInt()
-            val cellW = (38 * density).toInt()
-            val cellH = (22 * density).toInt()
-            val headerH = (22 * density).toInt()
-
-            val bmpW = labelW + dayLabels.size * cellW
-            val bmpH = headerH + hours * cellH
-
-            val bitmap = Bitmap.createBitmap(bmpW, bmpH, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            canvas.drawColor(Color.WHITE)
-
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
-            // 빈 시간 채우기
-            paint.color = Color.parseColor("#81C784")
-            for (slot in slots) {
-                val dayIdx = dayLabels.indexOf(slot.day)
-                if (dayIdx == -1) continue
-                val startMin = parseMinutes(slot.start_time)
-                val endMin = parseMinutes(slot.end_time)
-                val clampStart = maxOf(startMin, startHour * 60)
-                val clampEnd = minOf(endMin, endHour * 60)
-                if (clampStart >= clampEnd) continue
-                val left = (labelW + dayIdx * cellW + 1).toFloat()
-                val right = (labelW + (dayIdx + 1) * cellW - 1).toFloat()
-                val top = headerH + (clampStart - startHour * 60) / 60f * cellH
-                val bottom = headerH + (clampEnd - startHour * 60) / 60f * cellH
-                canvas.drawRect(left, top, right, bottom, paint)
+    // ── 공용 헬퍼: metadata.classes 파싱 ──
+    private fun parseClasses(metadata: String?): List<FreeSlot> {
+        if (metadata.isNullOrBlank()) return emptyList()
+        return try {
+            val json = Gson().fromJson(metadata, JsonObject::class.java)
+            val arr = json.getAsJsonArray("classes") ?: return emptyList()
+            arr.map { el ->
+                val obj = el.asJsonObject
+                FreeSlot(
+                    day = obj.get("day").asString,
+                    start_time = obj.get("start_time").asString,
+                    end_time = obj.get("end_time").asString
+                )
             }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 
-            // 격자선
-            paint.color = Color.parseColor("#CCCCCC")
-            paint.strokeWidth = 1f
-            for (i in 0..hours) {
-                val y = (headerH + i * cellH).toFloat()
-                canvas.drawLine(0f, y, bmpW.toFloat(), y, paint)
-            }
-            for (i in 0..dayLabels.size) {
-                val x = (labelW + i * cellW).toFloat()
-                canvas.drawLine(x, 0f, x, bmpH.toFloat(), paint)
-            }
+    // ── 공용 헬퍼: 시간표 비트맵 그리기 ──
+    private fun drawTimetableBitmap(view: ImageView, slots: List<FreeSlot>, slotColor: Int): Bitmap {
+        val density = view.context.resources.displayMetrics.density
+        val dayLabels = listOf("월", "화", "수", "목", "금", "토", "일")
+        val startHour = 9
+        val endHour = 24
+        val hours = endHour - startHour
 
-            // 요일 헤더
-            paint.color = Color.parseColor("#222222")
-            paint.textSize = 9 * density
-            paint.textAlign = Paint.Align.CENTER
-            for ((i, day) in dayLabels.withIndex()) {
-                val x = (labelW + i * cellW + cellW / 2).toFloat()
-                val y = headerH / 2f + paint.textSize / 3
-                canvas.drawText(day, x, y, paint)
-            }
+        val labelW = (36 * density).toInt()
+        val cellW = (38 * density).toInt()
+        val cellH = (22 * density).toInt()
+        val headerH = (22 * density).toInt()
 
-            // 시간 레이블 (1시간마다)
-            paint.textSize = 7.5f * density
-            paint.textAlign = Paint.Align.RIGHT
-            for (h in startHour until endHour) {
-                val y = (headerH + (h - startHour) * cellH + paint.textSize).toFloat()
-                canvas.drawText("%02d".format(h), (labelW - 2 * density), y, paint)
-            }
+        val bmpW = labelW + dayLabels.size * cellW
+        val bmpH = headerH + hours * cellH
 
-            return bitmap
+        val bitmap = Bitmap.createBitmap(bmpW, bmpH, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.WHITE)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        // 슬롯 채우기
+        paint.color = slotColor
+        for (slot in slots) {
+            val dayIdx = dayLabels.indexOf(slot.day)
+            if (dayIdx == -1) continue
+            val startMin = parseMinutes(slot.start_time)
+            val endMin = parseMinutes(slot.end_time)
+            val clampStart = maxOf(startMin, startHour * 60)
+            val clampEnd = minOf(endMin, endHour * 60)
+            if (clampStart >= clampEnd) continue
+            val left = (labelW + dayIdx * cellW + 1).toFloat()
+            val right = (labelW + (dayIdx + 1) * cellW - 1).toFloat()
+            val top = headerH + (clampStart - startHour * 60) / 60f * cellH
+            val bottom = headerH + (clampEnd - startHour * 60) / 60f * cellH
+            canvas.drawRect(left, top, right, bottom, paint)
         }
 
-        private fun parseMinutes(time: String): Int {
-            val parts = time.split(":")
-            return parts[0].toInt() * 60 + (if (parts.size > 1) parts[1].toInt() else 0)
+        // 격자선
+        paint.color = Color.parseColor("#CCCCCC")
+        paint.strokeWidth = 1f
+        for (i in 0..hours) {
+            val y = (headerH + i * cellH).toFloat()
+            canvas.drawLine(0f, y, bmpW.toFloat(), y, paint)
         }
+        for (i in 0..dayLabels.size) {
+            val x = (labelW + i * cellW).toFloat()
+            canvas.drawLine(x, 0f, x, bmpH.toFloat(), paint)
+        }
+
+        // 요일 헤더
+        paint.color = Color.parseColor("#222222")
+        paint.textSize = 9 * density
+        paint.textAlign = Paint.Align.CENTER
+        for ((i, day) in dayLabels.withIndex()) {
+            val x = (labelW + i * cellW + cellW / 2).toFloat()
+            val y = headerH / 2f + paint.textSize / 3
+            canvas.drawText(day, x, y, paint)
+        }
+
+        // 시간 레이블 (1시간마다)
+        paint.textSize = 7.5f * density
+        paint.textAlign = Paint.Align.RIGHT
+        for (h in startHour until endHour) {
+            val y = (headerH + (h - startHour) * cellH + paint.textSize).toFloat()
+            canvas.drawText("%02d".format(h), (labelW - 2 * density), y, paint)
+        }
+
+        return bitmap
+    }
+
+    private fun parseMinutes(time: String): Int {
+        val parts = time.split(":")
+        return parts[0].toInt() * 60 + (if (parts.size > 1) parts[1].toInt() else 0)
     }
 }
