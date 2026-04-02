@@ -14,5 +14,6 @@ data class CreateProductRequest(
 )
 
 data class CreateProductImageRequest(
-    val imageUrl: String
+    val imageUrl: String,
+    val originalImageUrl: String?
 )

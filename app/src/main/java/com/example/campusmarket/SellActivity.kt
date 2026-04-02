@@ -37,6 +37,7 @@ class SellActivity : AppCompatActivity() {
 
     private val selectedImageUris = MutableList<Uri?>(5) { null }
     private val tempImageIds = MutableList<Long?>(5) { null }
+    private val originalImageUrls = MutableList<String?>(5) { null }
     private val bgRemovedImageUrls = MutableList<String?>(5) { null }
 
     private val uploadingSlots = mutableSetOf<Int>()
@@ -104,6 +105,7 @@ class SellActivity : AppCompatActivity() {
     private fun onImageSelected(index: Int, uri: Uri) {
         selectedImageUris[index] = uri
         tempImageIds[index] = null
+        originalImageUrls[index] = null
         bgRemovedImageUrls[index] = null
 
         renderOriginalPreview(index, uri)
@@ -156,6 +158,7 @@ class SellActivity : AppCompatActivity() {
         }
 
         val validTempIds = getSelectedSlots().mapNotNull { tempImageIds[it] }
+        val validOriginalUrls = getSelectedSlots().map { originalImageUrls[it] ?: "" }
 
         if (imageList.isEmpty()) {
             toast("표시할 이미지가 없습니다.")
@@ -165,10 +168,12 @@ class SellActivity : AppCompatActivity() {
         Log.d("NEXT_PAGE", "checkRemoveBg=${checkRemoveBg.isChecked}")
         Log.d("NEXT_PAGE", "imageList=$imageList")
         Log.d("NEXT_PAGE", "validTempIds=$validTempIds")
+        Log.d("NEXT_PAGE", "validOriginalUrls=$validOriginalUrls")
 
         val intent = Intent(this, SellDetailActivity::class.java)
         intent.putStringArrayListExtra("imageList", ArrayList(imageList))
         intent.putExtra("tempImageIds", validTempIds.toLongArray())
+        intent.putStringArrayListExtra("originalImageUrls", ArrayList(validOriginalUrls))
         startActivity(intent)
     }
 
@@ -205,10 +210,11 @@ class SellActivity : AppCompatActivity() {
                     if (body != null && body.success && body.result != null) {
                         val result = body.result
                         tempImageIds[index] = result.tempImageId
+                        originalImageUrls[index] = result.originalImageUrl
 
                         Log.d(
                             "BG_REMOVE",
-                            "temp upload success: slot=$index, tempImageId=${result.tempImageId}"
+                            "temp upload success: slot=$index, tempImageId=${result.tempImageId}, originalImageUrl=${result.originalImageUrl}"
                         )
 
                         if (checkRemoveBg.isChecked && areAllSelectedImagesUploaded()) {

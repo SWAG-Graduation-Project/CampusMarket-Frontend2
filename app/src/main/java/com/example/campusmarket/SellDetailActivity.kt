@@ -53,6 +53,7 @@ class SellDetailActivity : AppCompatActivity() {
 
     private var imageList: ArrayList<String> = arrayListOf()
     private var tempImageIds: List<Long> = emptyList()
+    private var originalImageUrls: List<String> = emptyList()
     private var isFree: Boolean = false
 
     data class CategoryOption(
@@ -257,9 +258,11 @@ class SellDetailActivity : AppCompatActivity() {
     private fun receiveIntentData() {
         imageList = intent.getStringArrayListExtra("imageList") ?: arrayListOf()
         tempImageIds = intent.getLongArrayExtra("tempImageIds")?.toList() ?: emptyList()
+        originalImageUrls = intent.getStringArrayListExtra("originalImageUrls") ?: arrayListOf()
 
         Log.d("SELL_DETAIL", "received imageList=$imageList")
         Log.d("SELL_DETAIL", "received tempImageIds=$tempImageIds")
+        Log.d("SELL_DETAIL", "received originalImageUrls=$originalImageUrls")
 
         if (tempImageIds.isEmpty()) {
             Toast.makeText(this, "이미지 정보가 없습니다.", Toast.LENGTH_SHORT).show()
@@ -676,8 +679,11 @@ class SellDetailActivity : AppCompatActivity() {
             description = description,
             price = price,
             isFree = isFree,
-            images = imageList.map {
-                CreateProductImageRequest(imageUrl = it)
+            images = imageList.mapIndexed { index, url ->
+                CreateProductImageRequest(
+                    imageUrl = url,
+                    originalImageUrl = originalImageUrls.getOrNull(index)?.takeIf { it.isNotBlank() }
+                )
             }
         )
 
