@@ -92,7 +92,6 @@ class UserMarketActivity : AppCompatActivity() {
         ivProfileImage = findViewById(R.id.ivProfileImage)
         tvOpenDate = findViewById(R.id.tvOpenDate)
         tvTradeCount = findViewById(R.id.tvTradeCount)
-        ivStoreBanner = findViewById(R.id.ivStoreBanner)
         recyclerUserMarketPosts = findViewById(R.id.recyclerUserMarketPosts)
     }
 

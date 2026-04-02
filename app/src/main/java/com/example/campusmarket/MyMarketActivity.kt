@@ -30,12 +30,12 @@ class MyMarketActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerUserMarketPosts)
 
-        val dummyList = listOf(
-            "까만 학잠",
-            )
+      //  val dummyList = listOf(
+     //       "까만 학잠",
+        //    )
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MarketAdapter(dummyList)
+    //    recyclerView.adapter = MarketAdapter(dummyList)
         setupBottomNavigation()
     }
 

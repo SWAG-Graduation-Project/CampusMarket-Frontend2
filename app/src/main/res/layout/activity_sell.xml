@@ -38,10 +38,11 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="상품 등록하기"
             android:textColor="#3A2A1C"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="상품 등록하기"
+            />
     </LinearLayout>
 
     <!-- 사진 업로드 영역 -->

@@ -44,7 +44,7 @@
             android:layout_gravity="center_vertical"
             android:background="#E6C7A0"
             android:gravity="center"
-            android:text="수진이네 상점"
+            android:text="내 상점"
             android:textColor="#3A2A1C"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -69,9 +69,9 @@
 
         <View
             android:id="@+id/profileCircle"
-            android:layout_width="54dp"
+            android:layout_width="70dp"
             android:layout_height="54dp"
-            android:background="@drawable/bg_profile_circle" />
+            android:background="@drawable/ic_myinfo" />
 
         <LinearLayout
             android:layout_width="wrap_content"
