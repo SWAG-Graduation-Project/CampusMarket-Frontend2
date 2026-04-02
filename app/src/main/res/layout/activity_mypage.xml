@@ -34,7 +34,7 @@
             android:background="#E6C7A0"
             android:ellipsize="end"
             android:gravity="center"
-            android:text="내 시간표"
+            android:text="마이페이지"
             android:textColor="#3A2A1C"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -53,6 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

@@ -11,7 +11,7 @@ import com.example.campusmarket.data.model.SellingChatRoom
 
 class SellingChatAdapter(
     private val itemList: List<SellingChatRoom>,
-    private val onClick: (chatRoomId: Long) -> Unit
+    private val onClick: (chatRoomId: Long, isSeller: Boolean) -> Unit
 ) : RecyclerView.Adapter<SellingChatAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,7 +46,7 @@ class SellingChatAdapter(
             .error(R.drawable.chat_brawn)
             .into(holder.thumbnail)
 
-        holder.itemView.setOnClickListener { onClick(item.chatRoomId) }
+        holder.itemView.setOnClickListener { onClick(item.chatRoomId, item.isSeller) }
     }
 
     override fun getItemCount(): Int = itemList.size

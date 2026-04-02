@@ -83,7 +83,7 @@ class ChatListActivity : AppCompatActivity() {
     private fun loadChatRooms() {
         val guestUuid = GuestManager.getGuestUuid(this)
         if (guestUuid.isNullOrBlank()) {
-            recyclerView.adapter = SellingChatAdapter(emptyList()) {}
+            recyclerView.adapter = SellingChatAdapter(emptyList()) { _, _ -> }
             return
         }
 
@@ -97,19 +97,20 @@ class ChatListActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     val chatRooms = response.body()?.result?.chatRooms ?: emptyList()
-                    recyclerView.adapter = SellingChatAdapter(chatRooms) { chatRoomId ->
+                    recyclerView.adapter = SellingChatAdapter(chatRooms) { chatRoomId, isSeller ->
                         val intent = Intent(this@ChatListActivity, ChattActivity::class.java)
                         intent.putExtra("chatRoomId", chatRoomId)
+                        intent.putExtra("isSeller", isSeller)
                         startActivity(intent)
                     }
                 } else {
                     Toast.makeText(this@ChatListActivity, "채팅 목록 불러오기 실패", Toast.LENGTH_SHORT).show()
-                    recyclerView.adapter = SellingChatAdapter(emptyList()) {}
+                    recyclerView.adapter = SellingChatAdapter(emptyList()) { _, _ -> }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this@ChatListActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
-                recyclerView.adapter = SellingChatAdapter(emptyList()) {}
+                recyclerView.adapter = SellingChatAdapter(emptyList()) { _, _ -> }
             }
         }
     }

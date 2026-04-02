@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,7 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.campusmarket.data.model.ChatReceiveDto
 import com.example.campusmarket.data.model.ChatSendRequest
+import com.example.campusmarket.data.model.ProposalRequest
+import com.example.campusmarket.data.model.ProposalRespondRequest
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
 class ChattActivity : AppCompatActivity() {
@@ -46,6 +50,7 @@ class ChattActivity : AppCompatActivity() {
     private var chatRoomId: Long = -1L
     private var myMemberId: Long? = null
     private var guestUuid: String? = null
+    private var isSeller: Boolean = false
     private var stompManager: StompManager? = null
     private val gson = Gson()
 
@@ -63,14 +68,14 @@ class ChattActivity : AppCompatActivity() {
         chatRoomId = intent.getLongExtra("chatRoomId", -1L)
         guestUuid = GuestManager.getGuestUuid(this)
         myMemberId = GuestManager.getMemberId(this)
+        isSeller = intent.getBooleanExtra("isSeller", false)
 
         val title = findViewById<TextView>(R.id.tvHeaderTitle)
         title.text = "채팅"
 
         val backBtn = findViewById<ImageButton>(R.id.backbutton)
         backBtn.setOnClickListener {
-            val intent = Intent(this, ChatListActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ChatListActivity::class.java))
         }
 
         findViewById<LinearLayout>(R.id.gohome).setOnClickListener {
@@ -92,6 +97,9 @@ class ChattActivity : AppCompatActivity() {
 
         btnFabMain.setOnClickListener { toggleFab() }
 
+        // 판매자가 아니면 제안 버튼 숨김
+        if (!isSeller) layoutQuickActions.visibility = View.GONE
+
         if (chatRoomId != -1L) {
             loadPreviousMessages()
         }
@@ -104,13 +112,7 @@ class ChattActivity : AppCompatActivity() {
                 val response = RetrofitClient.apiService.getChatMessages(uuid, chatRoomId)
                 if (response.isSuccessful) {
                     val messages = response.body()?.result?.messages ?: emptyList()
-                    messages.forEach { dto ->
-                        val isMine = dto.senderId != null && dto.senderId == myMemberId
-                        val senderName = if (isMine) "" else (dto.senderNickname ?: "알 수 없음")
-                        val content = dto.content ?: ""
-                        val time = formatTime(dto.createdAt)
-                        messageList.add(ChatMessage(senderName, content, time, isMine))
-                    }
+                    messages.forEach { dto -> messageList.add(dtoToChatMessage(dto)) }
                     chatAdapter.notifyDataSetChanged()
                     if (messageList.isNotEmpty()) {
                         recyclerChatMessages.scrollToPosition(messageList.size - 1)
@@ -120,6 +122,51 @@ class ChattActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             connectStomp()
+        }
+    }
+
+    private fun dtoToChatMessage(dto: ChatReceiveDto): ChatMessage {
+        val isMine = dto.senderId != null && dto.senderId == myMemberId
+        val senderName = if (isMine) "" else (dto.senderNickname ?: "알 수 없음")
+        val time = formatTime(dto.createdAt)
+        val type = dto.messageType ?: "TEXT"
+
+        // PROPOSAL 메시지: metadata에서 proposalId/proposalType/proposalStatus 파싱
+        if (type == "PROPOSAL" || type.endsWith("_PROPOSAL")) {
+            val (proposalId, proposalType, proposalStatus) = parseProposalMeta(dto.metadata)
+            return ChatMessage(
+                senderName = senderName,
+                message = dto.content ?: "",
+                time = time,
+                isMine = isMine,
+                messageType = "PROPOSAL",
+                proposalId = proposalId,
+                proposalType = proposalType,
+                proposalStatus = proposalStatus,
+                metadata = dto.metadata
+            )
+        }
+
+        return ChatMessage(
+            senderName = senderName,
+            message = dto.content ?: "",
+            time = time,
+            isMine = isMine,
+            messageType = type,
+            metadata = dto.metadata
+        )
+    }
+
+    private fun parseProposalMeta(metadata: String?): Triple<Long?, String?, String?> {
+        if (metadata.isNullOrBlank()) return Triple(null, null, "PENDING")
+        return try {
+            val obj = gson.fromJson(metadata, JsonObject::class.java)
+            val id = if (obj.has("proposalId")) obj.get("proposalId").asLong else null
+            val type = if (obj.has("proposalType")) obj.get("proposalType").asString else null
+            val status = if (obj.has("proposalStatus")) obj.get("proposalStatus").asString else "PENDING"
+            Triple(id, type, status)
+        } catch (e: Exception) {
+            Triple(null, null, "PENDING")
         }
     }
 
@@ -133,11 +180,12 @@ class ChattActivity : AppCompatActivity() {
         stompManager?.onMessage = { json ->
             try {
                 val dto = gson.fromJson(json, ChatReceiveDto::class.java)
-                val isMine = dto.senderId != null && dto.senderId == myMemberId
-                val senderName = if (isMine) "" else (dto.senderNickname ?: "알 수 없음")
-                val content = dto.content ?: ""
-                val time = formatTime(dto.createdAt)
-                receiveMessageFromSocket(senderName, content, time, isMine)
+                val msg = dtoToChatMessage(dto)
+                runOnUiThread {
+                    messageList.add(msg)
+                    chatAdapter.notifyItemInserted(messageList.size - 1)
+                    recyclerChatMessages.scrollToPosition(messageList.size - 1)
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -145,17 +193,75 @@ class ChattActivity : AppCompatActivity() {
 
         stompManager?.onError = { error ->
             runOnUiThread {
-                android.widget.Toast.makeText(this, "연결 오류: $error", android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "연결 오류: $error", Toast.LENGTH_SHORT).show()
             }
         }
 
         stompManager?.connect()
     }
 
+    private fun sendProposal(proposalType: String) {
+        val uuid = guestUuid ?: return
+        if (chatRoomId == -1L) return
+        layoutQuickActions.visibility = View.GONE
+        isFabOpen = false
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.createProposal(
+                    uuid, chatRoomId, ProposalRequest(proposalType)
+                )
+                if (!response.isSuccessful || response.body()?.success != true) {
+                    Toast.makeText(this@ChattActivity, "제안 전송 실패", Toast.LENGTH_SHORT).show()
+                }
+                // 성공 시 WebSocket으로 메시지가 push됨 → onMessage에서 자동 처리
+            } catch (e: Exception) {
+                Toast.makeText(this@ChattActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun respondToProposal(proposalId: Long, accept: Boolean) {
+        val uuid = guestUuid ?: return
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.respondToProposal(
+                    uuid, chatRoomId, proposalId, ProposalRespondRequest(accept)
+                )
+                if (response.isSuccessful && response.body()?.success == true) {
+                    val status = if (accept) "ACCEPTED" else "REJECTED"
+                    // 기존 proposal 메시지의 상태 업데이트 (버튼 비활성화)
+                    val idx = messageList.indexOfLast {
+                        it.messageType == "PROPOSAL" && it.proposalId == proposalId
+                    }
+                    if (idx != -1) {
+                        messageList[idx] = messageList[idx].copy(proposalStatus = status)
+                        runOnUiThread { chatAdapter.notifyItemChanged(idx) }
+                    }
+                    if (accept) {
+                        val typeLabel = response.body()?.result?.proposalType
+                            ?.let { if (it == "LOCKER") "사물함" else "대면" } ?: ""
+                        runOnUiThread {
+                            Toast.makeText(this@ChattActivity, "${typeLabel} 거래가 성사되었습니다!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    // 수락 시 WebSocket으로 TIMETABLE_SHARE / SYSTEM 메시지 push됨
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@ChattActivity, "응답 처리 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this@ChattActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun formatTime(createdAt: String?): String {
         if (createdAt == null) return getCurrentTimeText()
         return try {
-            // "2024-01-01T23:21:00" → "23:21"
             val timePart = createdAt.substringAfter("T").take(5)
             if (timePart.length == 5) timePart else getCurrentTimeText()
         } catch (e: Exception) {
@@ -164,25 +270,18 @@ class ChattActivity : AppCompatActivity() {
     }
 
     private fun toggleFab() {
-        if (isFabOpen) {
-            layoutQuickActions.visibility = View.GONE
-        } else {
-            layoutQuickActions.visibility = View.VISIBLE
+        if (isSeller) {
+            isFabOpen = !isFabOpen
+            layoutQuickActions.visibility = if (isFabOpen) View.VISIBLE else View.GONE
         }
-        isFabOpen = !isFabOpen
     }
 
     private fun showSellCompleteDialog() {
         val dialog = android.app.Dialog(this)
         dialog.setContentView(R.layout.dialog_sell_complete)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
-        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
-
-        btnConfirm.setOnClickListener { dialog.dismiss() }
-        btnCancel.setOnClickListener { dialog.dismiss() }
-
+        dialog.findViewById<Button>(R.id.btnConfirm).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<Button>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
@@ -205,7 +304,12 @@ class ChattActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        chatAdapter = ChatMessageAdapter(messageList)
+        chatAdapter = ChatMessageAdapter(
+            items = messageList,
+            isSeller = isSeller,
+            onProposalAccept = { proposalId -> respondToProposal(proposalId, true) },
+            onProposalReject = { proposalId -> respondToProposal(proposalId, false) }
+        )
         recyclerChatMessages.layoutManager = LinearLayoutManager(this).apply {
             stackFromEnd = false
         }
@@ -221,8 +325,9 @@ class ChattActivity : AppCompatActivity() {
             }
         }
 
-        btnSuggestDelivery.setOnClickListener { sendMyMessage("사물함 거래를 제안할게요.") }
-        btnSuggestDirect.setOnClickListener { sendMyMessage("대면 거래를 제안할게요.") }
+        // 판매자: API 호출로 제안 전송
+        btnSuggestDelivery.setOnClickListener { sendProposal("LOCKER") }
+        btnSuggestDirect.setOnClickListener { sendProposal("FACE_TO_FACE") }
 
         burgerbar.setOnClickListener { openSettingPanel() }
         btnCloseSetting.setOnClickListener { closeSettingPanel() }
@@ -238,24 +343,19 @@ class ChattActivity : AppCompatActivity() {
 
         val btnBack = dialog.findViewById<Button>(R.id.btnBack)
         val btnSubmit = dialog.findViewById<Button>(R.id.btnSubmitReport)
-
         val option1 = dialog.findViewById<TextView>(R.id.option1)
         val option2 = dialog.findViewById<TextView>(R.id.option2)
         val option3 = dialog.findViewById<TextView>(R.id.option3)
         val option4 = dialog.findViewById<TextView>(R.id.option4)
 
         var selected = ""
-
         option1.setOnClickListener { selected = "선입금 요구" }
         option2.setOnClickListener { selected = "외부 메신저 유도" }
         option3.setOnClickListener { selected = "욕설 / 비하" }
         option4.setOnClickListener { selected = "기타" }
 
-        btnSubmit.setOnClickListener {
-            if (selected.isNotEmpty()) dialog.dismiss()
-        }
+        btnSubmit.setOnClickListener { if (selected.isNotEmpty()) dialog.dismiss() }
         btnBack.setOnClickListener { dialog.dismiss() }
-
         dialog.show()
     }
 
@@ -276,37 +376,15 @@ class ChattActivity : AppCompatActivity() {
     }
 
     private fun sendMyMessage(text: String) {
-        val uuid = guestUuid
-        if (uuid.isNullOrBlank() || chatRoomId == -1L) return
-
-        val request = ChatSendRequest(
-            guestUuid = uuid,
-            messageType = "TEXT",
-            content = text
-        )
-        val json = gson.toJson(request)
-        stompManager?.send("/pub/chat/$chatRoomId", json)
-    }
-
-    private fun receiveMessageFromSocket(sender: String, message: String, time: String, isMine: Boolean) {
-        val newMessage = ChatMessage(
-            senderName = sender,
-            message = message,
-            time = time,
-            isMine = isMine
-        )
-        runOnUiThread {
-            messageList.add(newMessage)
-            chatAdapter.notifyItemInserted(messageList.size - 1)
-            recyclerChatMessages.scrollToPosition(messageList.size - 1)
-        }
+        val uuid = guestUuid ?: return
+        if (chatRoomId == -1L) return
+        val request = ChatSendRequest(guestUuid = uuid, messageType = "TEXT", content = text)
+        stompManager?.send("/pub/chat/$chatRoomId", gson.toJson(request))
     }
 
     private fun getCurrentTimeText(): String {
-        val calendar = java.util.Calendar.getInstance()
-        val hour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(java.util.Calendar.MINUTE)
-        return String.format("%02d:%02d", hour, minute)
+        val cal = java.util.Calendar.getInstance()
+        return String.format("%02d:%02d", cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
     }
 
     override fun onDestroy() {

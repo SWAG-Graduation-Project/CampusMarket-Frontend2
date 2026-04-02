@@ -5,6 +5,9 @@ import com.example.campusmarket.data.model.ChatRoomRequest
 import com.example.campusmarket.data.model.ChatRoomResponse
 import com.example.campusmarket.data.model.MajorCategoryResponse
 import com.example.campusmarket.data.model.ProductDetailResponse
+import com.example.campusmarket.data.model.ProposalRequest
+import com.example.campusmarket.data.model.ProposalRespondRequest
+import com.example.campusmarket.data.model.ProposalResponse
 import com.example.campusmarket.data.model.SellingChatRoomsResponse
 import com.example.campusmarket.data.model.StoreResponse
 import com.example.campusmarket.data.model.UserMarketProductsResponse
@@ -14,6 +17,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -51,6 +55,21 @@ interface ApiService {
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 50
     ): Response<ChatMessagesResponse>
+
+    @POST("chat/rooms/{chatRoomId}/proposals")
+    suspend fun createProposal(
+        @Header("guestUuid") guestUuid: String,
+        @Path("chatRoomId") chatRoomId: Long,
+        @Body request: ProposalRequest
+    ): Response<ProposalResponse>
+
+    @PUT("chat/rooms/{chatRoomId}/proposals/{proposalId}")
+    suspend fun respondToProposal(
+        @Header("guestUuid") guestUuid: String,
+        @Path("chatRoomId") chatRoomId: Long,
+        @Path("proposalId") proposalId: Long,
+        @Body request: ProposalRespondRequest
+    ): Response<ProposalResponse>
 
     @GET("products/{productId}")
     suspend fun getProductDetail(

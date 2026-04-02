@@ -61,3 +61,29 @@ data class ChatMessagesResult(
     val totalCount: Int,
     val hasNext: Boolean
 )
+
+data class ProposalRequest(val proposalType: String)
+
+data class ProposalRespondRequest(val accept: Boolean)
+
+data class ProposalResult(
+    val proposalId: Long,
+    val chatRoomId: Long,
+    val proposalType: String,
+    val proposalStatus: String,
+    val proposalMessageId: Long?,
+    val responseMessageId: Long?,
+    val proposedAt: String?,
+    val respondedAt: String?
+)
+
+data class ProposalResponse(
+    val code: String,
+    val message: String,
+    val result: ProposalResult?,
+    val success: Boolean
+)
+
+data class FreeSlot(val day: String, val start_time: String, val end_time: String)
+
+data class FreeSlotsMetadata(val freeSlots: List<FreeSlot>)
