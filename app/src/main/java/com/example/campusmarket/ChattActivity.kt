@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.campusmarket.data.LockerDataSource
 import com.example.campusmarket.data.model.ChatReceiveDto
 import com.example.campusmarket.data.model.ChatSendRequest
 import com.example.campusmarket.data.model.ProposalRequest
@@ -331,6 +332,57 @@ class ChattActivity : AppCompatActivity() {
         }
     }
 
+    private fun showLockerImagePopup(metadata: String?) {
+        android.util.Log.d("LOCKER_POPUP", "metadata=$metadata")
+        if (metadata.isNullOrBlank()) {
+            Toast.makeText(this, "사물함 정보를 불러올 수 없습니다", Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            val obj = gson.fromJson(metadata, JsonObject::class.java)
+            android.util.Log.d("LOCKER_POPUP", "parsed json=$obj keys=${obj.keySet()}")
+
+            val building = listOf("building", "buildingName", "building_name").firstNotNullOfOrNull { key ->
+                obj.get(key)?.asString?.takeIf { it.isNotBlank() }
+            }
+            android.util.Log.d("LOCKER_POPUP", "building=$building")
+
+            if (building == null) {
+                Toast.makeText(this, "사물함 위치 정보가 없습니다", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            val floor = listOf("floor").firstNotNullOfOrNull { key ->
+                val el = obj.get(key) ?: return@firstNotNullOfOrNull null
+                runCatching {
+                    if (el.isJsonPrimitive) {
+                        val p = el.asJsonPrimitive
+                        if (p.isNumber) p.asInt else p.asString.trim().toInt()
+                    } else null
+                }.getOrNull()
+            } ?: 1
+            android.util.Log.d("LOCKER_POPUP", "floor=$floor")
+
+            val group = LockerDataSource.lockerList.firstOrNull {
+                it.buildingName == building && it.floor == floor
+            }
+            val imageIndex = group?.imageIndex ?: 1
+            android.util.Log.d("LOCKER_POPUP", "group=$group imageIndex=$imageIndex")
+
+            LockerGroupPopupDialogFragment(
+                buildingName = building,
+                floor = floor,
+                imageIndex = imageIndex,
+                loungeImages = LockerDataSource.loungeImageList,
+                lockerGroups = LockerDataSource.lockerList,
+                onLockerGroupSelected = { /* 보기 전용 */ }
+            ).show(supportFragmentManager, "lockerViewPopup")
+        } catch (e: Exception) {
+            android.util.Log.e("LOCKER_POPUP", "exception: ${e.message}", e)
+            Toast.makeText(this, "사물함 정보를 표시할 수 없습니다: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun showSellCompleteDialog() {
         val dialog = android.app.Dialog(this)
         dialog.setContentView(R.layout.dialog_sell_complete)
@@ -363,7 +415,8 @@ class ChattActivity : AppCompatActivity() {
             items = messageList,
             isSeller = isSeller,
             onProposalAccept = { proposalId -> respondToProposal(proposalId, true) },
-            onProposalReject = { proposalId -> respondToProposal(proposalId, false) }
+            onProposalReject = { proposalId -> respondToProposal(proposalId, false) },
+            onLockerCheck = { metadata -> showLockerImagePopup(metadata) }
         )
         recyclerChatMessages.layoutManager = LinearLayoutManager(this).apply {
             stackFromEnd = false

@@ -19,7 +19,8 @@ class ChatMessageAdapter(
     private val items: List<ChatMessage>,
     private val isSeller: Boolean,
     var onProposalAccept: ((proposalId: Long) -> Unit)? = null,
-    var onProposalReject: ((proposalId: Long) -> Unit)? = null
+    var onProposalReject: ((proposalId: Long) -> Unit)? = null,
+    var onLockerCheck: ((metadata: String?) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -30,6 +31,8 @@ class ChatMessageAdapter(
         const val TYPE_IMAGE_ME = 4
         const val TYPE_IMAGE_OTHER = 5
         const val TYPE_FREE_SLOTS = 6
+        const val TYPE_LOCKER_SHARE_ME = 7
+        const val TYPE_LOCKER_SHARE_OTHER = 8
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -37,7 +40,7 @@ class ChatMessageAdapter(
         return when (item.messageType) {
             "PROPOSAL", "LOCKER_PROPOSAL", "FACE_TO_FACE_PROPOSAL" -> TYPE_OFFER_NOTICE
             "TIMETABLE_SHARE" -> if (item.isMine) TYPE_IMAGE_ME else TYPE_IMAGE_OTHER
-            "LOCKER_SHARE" -> if (item.isMine) TYPE_ME else TYPE_OTHER
+            "LOCKER_SHARE" -> if (item.isMine) TYPE_LOCKER_SHARE_ME else TYPE_LOCKER_SHARE_OTHER
             "SYSTEM" -> {
                 if (!item.metadata.isNullOrBlank() && item.metadata.contains("freeSlots"))
                     TYPE_FREE_SLOTS
@@ -57,6 +60,8 @@ class ChatMessageAdapter(
             TYPE_IMAGE_ME -> ImageMeViewHolder(inflater.inflate(R.layout.item_chat_image_me, parent, false))
             TYPE_IMAGE_OTHER -> ImageOtherViewHolder(inflater.inflate(R.layout.item_chat_image_other, parent, false))
             TYPE_FREE_SLOTS -> FreeSlotsViewHolder(inflater.inflate(R.layout.item_chat_free_slots, parent, false))
+            TYPE_LOCKER_SHARE_ME -> LockerShareMeViewHolder(inflater.inflate(R.layout.item_chat_locker_share_me, parent, false))
+            TYPE_LOCKER_SHARE_OTHER -> LockerShareOtherViewHolder(inflater.inflate(R.layout.item_chat_locker_share_other, parent, false))
             else -> OtherMessageViewHolder(inflater.inflate(R.layout.item_chat_other, parent, false))
         }
     }
@@ -71,6 +76,8 @@ class ChatMessageAdapter(
             is ImageMeViewHolder -> holder.bind(item)
             is ImageOtherViewHolder -> holder.bind(item)
             is FreeSlotsViewHolder -> holder.bind(item)
+            is LockerShareMeViewHolder -> holder.bind(item)
+            is LockerShareOtherViewHolder -> holder.bind(item)
         }
     }
 
@@ -197,6 +204,32 @@ class ChatMessageAdapter(
             } catch (e: Exception) {
                 emptyList()
             }
+        }
+    }
+
+    // ── LOCKER_SHARE: 내가 보낸 사물함 정보 ──
+    inner class LockerShareMeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvMessage: TextView = itemView.findViewById(R.id.tvMyMessage)
+        private val tvTime: TextView = itemView.findViewById(R.id.tvMyTime)
+        private val btnCheck: android.widget.Button = itemView.findViewById(R.id.btnCheckLocker)
+        fun bind(item: ChatMessage) {
+            tvMessage.text = item.message
+            tvTime.text = item.time
+            btnCheck.setOnClickListener { onLockerCheck?.invoke(item.metadata) }
+        }
+    }
+
+    // ── LOCKER_SHARE: 상대방이 보낸 사물함 정보 ──
+    inner class LockerShareOtherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvSender: TextView = itemView.findViewById(R.id.tvSenderName)
+        private val tvMessage: TextView = itemView.findViewById(R.id.tvOtherMessage)
+        private val tvTime: TextView = itemView.findViewById(R.id.tvOtherTime)
+        private val btnCheck: android.widget.Button = itemView.findViewById(R.id.btnCheckLocker)
+        fun bind(item: ChatMessage) {
+            tvSender.text = item.senderName
+            tvMessage.text = item.message
+            tvTime.text = item.time
+            btnCheck.setOnClickListener { onLockerCheck?.invoke(item.metadata) }
         }
     }
 
