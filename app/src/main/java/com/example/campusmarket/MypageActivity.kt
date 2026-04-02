@@ -161,7 +161,22 @@ class MypageActivity : AppCompatActivity() {
                 currentTimetableData = data.timetableData ?: ""
 
                 profileNameButton.text = currentNickname.ifBlank { "닉네임 없음" }
-                tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+
+                // 사물함 상세 정보 별도 조회 → "차관 1층 수학과 3그룹 3행 9열" 포맷
+                try {
+                    val lockerResp = memberApi.getMyLocker(guestUuid)
+                    val lr = lockerResp.body()?.result
+                    if (lr != null) {
+                        val floorNum = lr.floor.trim().toIntOrNull() ?: lr.floor
+                        val formatted = "${lr.building} ${floorNum}층 ${lr.major} ${lr.lockerGroup}그룹 ${lr.row}행 ${lr.col}열"
+                        tvLockerName.text = "• $formatted"
+                        currentLockerName = formatted
+                    } else {
+                        tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                    }
+                } catch (e: Exception) {
+                    tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                }
 
                 if (currentTimetableData.isNotBlank()) {
                     renderTimetableFromJson(currentTimetableData)
@@ -207,7 +222,18 @@ class MypageActivity : AppCompatActivity() {
                         currentTimetableData = result.timetableData
 
                         profileNameButton.text = currentNickname.ifBlank { "닉네임 없음" }
-                        tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                        // 저장 후에도 상세 포맷으로 재조회
+                        try {
+                            val lr2 = memberApi.getMyLocker(guestUuid).body()?.result
+                            if (lr2 != null) {
+                                val floorNum = lr2.floor.trim().toIntOrNull() ?: lr2.floor
+                                tvLockerName.text = "• ${lr2.building} ${floorNum}층 ${lr2.major} ${lr2.lockerGroup}그룹 ${lr2.row}행 ${lr2.col}열"
+                            } else {
+                                tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                            }
+                        } catch (e2: Exception) {
+                            tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                        }
                     }
                     Toast.makeText(this@MypageActivity, "프로필이 저장되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {

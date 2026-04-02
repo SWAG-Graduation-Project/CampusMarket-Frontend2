@@ -260,8 +260,8 @@ class StartGetInfo : AppCompatActivity() {
             floor = floor,
             imageIndex = imageIndex,
             loungeImages = LockerDataSource.loungeImageList,
-            lockerGroups = LockerDataSource.lockerList
-        ) { selectedGroup ->
+            lockerGroups = LockerDataSource.lockerList,
+            onLockerGroupSelected = { selectedGroup ->
 
             selectedLockerGroup = selectedGroup
 
@@ -287,11 +287,10 @@ class StartGetInfo : AppCompatActivity() {
                     "LOCKER_GROUP",
                     "groupData not found: building=${selectedGroup.buildingName}, floor=${selectedGroup.floor}, major=${selectedGroup.major}, group=${selectedGroup.groupNumber}"
                 )
-                return@LockerGroupPopupDialogFragment
+            } else {
+                openLockerFrontPopup(matchedGroupData)
             }
-
-            openLockerFrontPopup(matchedGroupData)
-        }
+        })
 
         popup.show(supportFragmentManager, "LockerGroupPopup")
     }

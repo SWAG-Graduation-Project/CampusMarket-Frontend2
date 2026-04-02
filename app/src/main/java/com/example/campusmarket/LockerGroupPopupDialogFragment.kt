@@ -19,7 +19,9 @@ class LockerGroupPopupDialogFragment(
     private val imageIndex: Int,
     private val loungeImages: List<LoungeImageData>,
     private val lockerGroups: List<LockerGroupData>,
-    private val onLockerGroupSelected: (SelectedLockerGroup) -> Unit
+    private val onLockerGroupSelected: (SelectedLockerGroup) -> Unit,
+    private val highlightGroupNumber: Int? = null,
+    private val highlightMajor: String? = null
 ) : DialogFragment() {
 
     private lateinit var loungeOverlay: FrameLayout
@@ -149,6 +151,25 @@ class LockerGroupPopupDialogFragment(
         }
 
         loungeImageStage.addView(locker)
+
+        // here 마커: highlightGroupNumber & highlightMajor 가 일치하면 표시
+        val isHighlight = highlightGroupNumber != null &&
+            lockerData.groupNumber == highlightGroupNumber &&
+            (highlightMajor == null || lockerData.major == highlightMajor)
+        if (isHighlight) {
+            val markerSize = (loungeImageStage.width * 0.10f).toInt()
+            val marker = ImageView(requireContext()).apply {
+                setImageResource(R.drawable.here)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            val markerParams = FrameLayout.LayoutParams(markerSize, (markerSize * 1.4f).toInt())
+            marker.layoutParams = markerParams
+            marker.x = finalX + lockerWidth / 2f - markerSize / 2f
+            marker.y = finalY - (markerSize * 1.4f).toInt()
+            marker.elevation = 30f
+            marker.isClickable = false
+            loungeImageStage.addView(marker)
+        }
     }
 
     private fun resetLockerSelection() {

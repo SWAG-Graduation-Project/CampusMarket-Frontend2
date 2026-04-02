@@ -213,7 +213,7 @@ class ChatMessageAdapter(
         private val tvTime: TextView = itemView.findViewById(R.id.tvMyTime)
         private val btnCheck: android.widget.Button = itemView.findViewById(R.id.btnCheckLocker)
         fun bind(item: ChatMessage) {
-            tvMessage.text = item.message
+            tvMessage.text = formatLockerText(item.metadata, item.message)
             tvTime.text = item.time
             btnCheck.setOnClickListener { onLockerCheck?.invoke(item.metadata) }
         }
@@ -227,9 +227,47 @@ class ChatMessageAdapter(
         private val btnCheck: android.widget.Button = itemView.findViewById(R.id.btnCheckLocker)
         fun bind(item: ChatMessage) {
             tvSender.text = item.senderName
-            tvMessage.text = item.message
+            tvMessage.text = formatLockerText(item.metadata, item.message)
             tvTime.text = item.time
             btnCheck.setOnClickListener { onLockerCheck?.invoke(item.metadata) }
+        }
+    }
+
+    private fun formatLockerText(metadata: String?, fallback: String): String {
+        if (metadata.isNullOrBlank()) return fallback
+        return try {
+            val obj = Gson().fromJson(metadata, JsonObject::class.java)
+            val building = listOf("lockerBuilding", "building", "buildingName")
+                .firstNotNullOfOrNull { k -> obj.get(k)?.asString?.takeIf { it.isNotBlank() } }
+                ?: return fallback
+            val floor = listOf("lockerFloor", "floor")
+                .firstNotNullOfOrNull { k ->
+                    val el = obj.get(k) ?: return@firstNotNullOfOrNull null
+                    runCatching {
+                        if (el.isJsonPrimitive) {
+                            val p = el.asJsonPrimitive
+                            if (p.isNumber) p.asInt else p.asString.trim().toInt()
+                        } else null
+                    }.getOrNull()
+                } ?: return fallback
+            val major = listOf("lockerMajor", "major")
+                .firstNotNullOfOrNull { k -> obj.get(k)?.asString?.takeIf { it.isNotBlank() } } ?: ""
+            val group = listOf("lockerGroup", "groupNumber")
+                .firstNotNullOfOrNull { k -> runCatching { obj.get(k)?.asInt }.getOrNull() } ?: 0
+            val row = listOf("lockerRow", "row")
+                .firstNotNullOfOrNull { k -> runCatching { obj.get(k)?.asInt }.getOrNull() } ?: 0
+            val col = listOf("lockerCol", "col")
+                .firstNotNullOfOrNull { k -> runCatching { obj.get(k)?.asInt }.getOrNull() } ?: 0
+
+            buildString {
+                append("$building ${floor}층")
+                if (major.isNotBlank()) append(" $major")
+                if (group > 0) append(" ${group}그룹")
+                if (row > 0) append(" ${row}행")
+                if (col > 0) append(" ${col}열")
+            }
+        } catch (e: Exception) {
+            fallback
         }
     }
 

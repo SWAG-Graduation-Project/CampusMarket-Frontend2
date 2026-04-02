@@ -340,19 +340,12 @@ class ChattActivity : AppCompatActivity() {
         }
         try {
             val obj = gson.fromJson(metadata, JsonObject::class.java)
-            android.util.Log.d("LOCKER_POPUP", "parsed json=$obj keys=${obj.keySet()}")
+            android.util.Log.d("LOCKER_POPUP", "keys=${obj.keySet()}")
 
-            val building = listOf("building", "buildingName", "building_name").firstNotNullOfOrNull { key ->
+            val building = listOf("lockerBuilding", "building", "buildingName").firstNotNullOfOrNull { key ->
                 obj.get(key)?.asString?.takeIf { it.isNotBlank() }
             }
-            android.util.Log.d("LOCKER_POPUP", "building=$building")
-
-            if (building == null) {
-                Toast.makeText(this, "사물함 위치 정보가 없습니다", Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            val floor = listOf("floor").firstNotNullOfOrNull { key ->
+            val floor = listOf("lockerFloor", "floor").firstNotNullOfOrNull { key ->
                 val el = obj.get(key) ?: return@firstNotNullOfOrNull null
                 runCatching {
                     if (el.isJsonPrimitive) {
@@ -361,25 +354,74 @@ class ChattActivity : AppCompatActivity() {
                     } else null
                 }.getOrNull()
             } ?: 1
-            android.util.Log.d("LOCKER_POPUP", "floor=$floor")
 
+            android.util.Log.d("LOCKER_POPUP", "building=$building floor=$floor")
+
+            if (building == null) {
+                Toast.makeText(this, "사물함 위치 정보가 없습니다", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            // LockerDataSource에서 해당 건물 데이터 조회
             val group = LockerDataSource.lockerList.firstOrNull {
                 it.buildingName == building && it.floor == floor
             }
-            val imageIndex = group?.imageIndex ?: 1
-            android.util.Log.d("LOCKER_POPUP", "group=$group imageIndex=$imageIndex")
+            val loungeExists = LockerDataSource.loungeImageList.any {
+                it.buildingName == building && it.floor == floor
+            }
+            android.util.Log.d("LOCKER_POPUP", "group=$group loungeExists=$loungeExists")
 
+            if (!loungeExists) {
+                // 해당 건물의 지도 이미지가 없으면 사물함 정보를 텍스트 다이얼로그로 표시
+                val lockerName = obj.get("lockerName")?.asString ?: ""
+                val major = listOf("lockerMajor", "major").firstNotNullOfOrNull { k -> obj.get(k)?.asString } ?: ""
+                val lockerGroup = listOf("lockerGroup").firstNotNullOfOrNull { k ->
+                    runCatching { obj.get(k)?.asInt }.getOrNull()
+                } ?: 0
+                val row = listOf("lockerRow", "row").firstNotNullOfOrNull { k ->
+                    runCatching { obj.get(k)?.asInt }.getOrNull()
+                } ?: 0
+                val col = listOf("lockerCol", "col").firstNotNullOfOrNull { k ->
+                    runCatching { obj.get(k)?.asInt }.getOrNull()
+                } ?: 0
+                val info = buildString {
+                    if (lockerName.isNotBlank()) appendLine("사물함: $lockerName")
+                    appendLine("건물: $building")
+                    appendLine("층: ${floor}층")
+                    if (major.isNotBlank()) appendLine("구역: $major")
+                    if (lockerGroup > 0) appendLine("그룹: ${lockerGroup}번")
+                    if (row > 0 && col > 0) append("위치: ${row}행 ${col}열")
+                }
+                android.app.AlertDialog.Builder(this)
+                    .setTitle("사물함 위치")
+                    .setMessage(info.trim())
+                    .setPositiveButton("확인", null)
+                    .show()
+                return
+            }
+
+            val major = listOf("lockerMajor", "major").firstNotNullOfOrNull { k ->
+                obj.get(k)?.asString?.takeIf { it.isNotBlank() }
+            }
+            val lockerGroupNum = listOf("lockerGroup", "groupNumber").firstNotNullOfOrNull { k ->
+                runCatching { obj.get(k)?.asInt }.getOrNull()
+            }
+
+            val imageIndex = group?.imageIndex ?: 1
             LockerGroupPopupDialogFragment(
                 buildingName = building,
                 floor = floor,
                 imageIndex = imageIndex,
                 loungeImages = LockerDataSource.loungeImageList,
                 lockerGroups = LockerDataSource.lockerList,
-                onLockerGroupSelected = { /* 보기 전용 */ }
+                onLockerGroupSelected = { /* 보기 전용 */ },
+                highlightGroupNumber = lockerGroupNum,
+                highlightMajor = major
             ).show(supportFragmentManager, "lockerViewPopup")
+
         } catch (e: Exception) {
             android.util.Log.e("LOCKER_POPUP", "exception: ${e.message}", e)
-            Toast.makeText(this, "사물함 정보를 표시할 수 없습니다: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "사물함 정보를 표시할 수 없습니다", Toast.LENGTH_SHORT).show()
         }
     }
 
