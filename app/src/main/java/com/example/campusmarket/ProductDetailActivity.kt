@@ -4,9 +4,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -38,8 +38,13 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var btnChat: Button
     private lateinit var btnLike: Button
 
+    // 🔥 네비게이션
+    private lateinit var goHome: LinearLayout
+    private lateinit var goMyMarket: LinearLayout
+    private lateinit var goChat: LinearLayout
+    private lateinit var goMyPage: LinearLayout
+
     private val apiService by lazy { RetrofitClient.apiService }
-    private val apiBaseUrl = "http://3.36.120.78:8080"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         bindViews()
+        setupBottomNavigation() // 🔥 여기 핵심
 
         val productId = intent.getLongExtra("productId", -1L)
 
@@ -81,7 +87,43 @@ class ProductDetailActivity : AppCompatActivity() {
         tvDescription = findViewById(R.id.tvDescription)
         btnChat = findViewById(R.id.btnChat)
         btnLike = findViewById(R.id.btnLike)
+
+        // 🔥 NavBar 연결
+        goHome = findViewById(R.id.gohome)
+        goMyMarket = findViewById(R.id.goMymarket)
+        goChat = findViewById(R.id.gochat)
+        goMyPage = findViewById(R.id.gomypage)
     }
+
+    // ✅ 여기 중요
+    private fun setupBottomNavigation() {
+
+        goHome.setOnClickListener {
+            startActivity(Intent(this, MarketActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
+        }
+
+        goMyMarket.setOnClickListener {
+            startActivity(Intent(this, MyMarketActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
+        }
+
+        goChat.setOnClickListener {
+            startActivity(Intent(this, ChatListActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
+        }
+
+        goMyPage.setOnClickListener {
+            startActivity(Intent(this, MypageActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
+        }
+    }
+
+    // ===== 기존 코드 =====
 
     private fun loadProductDetail(productId: Long) {
         lifecycleScope.launch {
@@ -100,16 +142,14 @@ class ProductDetailActivity : AppCompatActivity() {
                 tagState.text = formatCondition(result.productCondition)
                 tagColor.text = formatColor(result.color)
 
-                tvDescription.text = result.description?.takeIf { it.isNotBlank() } ?: "상품 설명이 없습니다."
+                tvDescription.text = result.description ?: "상품 설명이 없습니다."
                 btnLike.text = "관심 ${result.wishCount}"
 
-                val selectedImageUrl = pickProductImageUrl(
-                    images = result.images,
-                    fallbackDisplayAssetImageUrl = result.displayAssetImageUrl
-                )
+                val imageUrl = result.images?.firstOrNull()?.originalImageUrl
+                    ?: result.displayAssetImageUrl
 
                 val bitmap = withContext(Dispatchers.IO) {
-                    selectedImageUrl?.let { loadBitmapFromUrl(it) }
+                    imageUrl?.let { loadBitmapFromUrl(it) }
                 }
 
                 if (bitmap != null) {
@@ -118,41 +158,14 @@ class ProductDetailActivity : AppCompatActivity() {
                     ivProduct.setImageResource(R.drawable.clothes12)
                 }
 
-                Log.d("PRODUCT_DETAIL", "상품 상세 조회 성공 productId=$productId, imageUrl=$selectedImageUrl")
             } catch (e: Exception) {
-                Log.e("PRODUCT_DETAIL", "상품 상세 조회 실패: ${e.message}", e)
                 Toast.makeText(this@ProductDetailActivity, "상품 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun pickProductImageUrl(
-        images: List<ProductImage>?,
-        fallbackDisplayAssetImageUrl: String?
-    ): String? {
-        if (!images.isNullOrEmpty()) {
-            val firstImage = images.sortedBy { it.displayOrder }.firstOrNull()
-
-            val originalImageUrl = normalizeImageUrl(firstImage?.originalImageUrl)
-            if (!originalImageUrl.isNullOrBlank()) {
-                return originalImageUrl
-            }
-
-            val removedImageUrl = normalizeImageUrl(firstImage?.imageUrl)
-            if (!removedImageUrl.isNullOrBlank()) {
-                return removedImageUrl
-            }
-        }
-
-        return normalizeImageUrl(fallbackDisplayAssetImageUrl)
-    }
-
     private fun createOrEnterChatRoom(productId: Long) {
-        val guestUuid = GuestManager.getGuestUuid(this)
-        if (guestUuid.isNullOrBlank()) {
-            Toast.makeText(this, "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val guestUuid = GuestManager.getGuestUuid(this) ?: return
 
         lifecycleScope.launch {
             try {
@@ -161,39 +174,20 @@ class ProductDetailActivity : AppCompatActivity() {
                     request = ChatRoomRequest(productId = productId)
                 )
 
-                if (response.isSuccessful) {
-                    val chatRoomId = response.body()?.result?.chatRoomId
-                    if (chatRoomId != null) {
-                        val intent = Intent(this@ProductDetailActivity, ChattActivity::class.java)
-                        intent.putExtra("chatRoomId", chatRoomId)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this@ProductDetailActivity, "채팅방 생성 실패", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(
-                        this@ProductDetailActivity,
-                        "채팅방 생성 실패: ${response.code()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                val chatRoomId = response.body()?.result?.chatRoomId
+                if (chatRoomId != null) {
+                    val intent = Intent(this@ProductDetailActivity, ChattActivity::class.java)
+                    intent.putExtra("chatRoomId", chatRoomId)
+                    startActivity(intent)
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
                 Toast.makeText(this@ProductDetailActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun formatDate(rawDate: String?): String {
-        if (rawDate.isNullOrBlank()) return "-"
-
-        return try {
-            val datePart = rawDate.substring(0, 10)
-            val split = datePart.split("-")
-            "${split[1]}.${split[2]}"
-        } catch (e: Exception) {
-            rawDate
-        }
+        return rawDate?.substring(5, 10)?.replace("-", ".") ?: "-"
     }
 
     private fun formatPrice(price: Int): String {
@@ -207,62 +201,24 @@ class ProductDetailActivity : AppCompatActivity() {
             "NORMAL" -> "보통"
             "BAD" -> "사용감"
             "UNOPENED" -> "미개봉"
-            else -> condition ?: "-"
+            else -> "-"
         }
     }
 
     private fun formatColor(color: String?): String {
         return when (color?.lowercase()) {
-            "beige" -> "베이지"
             "black" -> "블랙"
             "white" -> "화이트"
-            "brown" -> "브라운"
-            "gray" -> "그레이"
-            "blue" -> "블루"
-            "red" -> "레드"
-            "pink" -> "핑크"
-            "green" -> "그린"
-            "yellow" -> "옐로우"
             else -> color ?: "-"
         }
     }
 
-    private fun normalizeImageUrl(rawPath: String?): String? {
-        if (rawPath.isNullOrBlank()) return null
-
-        return when {
-            rawPath.startsWith("http://") || rawPath.startsWith("https://") -> rawPath
-            rawPath.startsWith("/") -> "$apiBaseUrl$rawPath"
-            else -> "$apiBaseUrl/$rawPath"
-        }
-    }
-
-    private fun loadBitmapFromUrl(imageUrl: String): Bitmap? {
+    private fun loadBitmapFromUrl(url: String): Bitmap? {
         return try {
-            val url = URL(imageUrl)
-            val connection = (url.openConnection() as HttpURLConnection).apply {
-                requestMethod = "GET"
-                connectTimeout = 10000
-                readTimeout = 10000
-                doInput = true
-                connect()
-            }
-
-            val responseCode = connection.responseCode
-            Log.d("PRODUCT_DETAIL_IMAGE", "url=$imageUrl, responseCode=$responseCode")
-
-            if (responseCode !in 200..299) {
-                connection.disconnect()
-                return null
-            }
-
-            val stream = connection.inputStream
-            val bitmap = BitmapFactory.decodeStream(stream)
-            stream.close()
-            connection.disconnect()
-            bitmap
+            val connection = URL(url).openConnection() as HttpURLConnection
+            connection.connect()
+            BitmapFactory.decodeStream(connection.inputStream)
         } catch (e: Exception) {
-            Log.e("PRODUCT_DETAIL_IMAGE", "이미지 로드 실패: $imageUrl", e)
             null
         }
     }
