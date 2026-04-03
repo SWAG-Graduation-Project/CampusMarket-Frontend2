@@ -42,6 +42,11 @@ class MypageActivity : AppCompatActivity() {
     private lateinit var timetableContainer: FrameLayout
     private lateinit var weeklyTimetableView: WeeklyTimetableView
 
+    private lateinit var navHome: LinearLayout
+    private lateinit var navMyMarket: LinearLayout
+    private lateinit var navChat: LinearLayout
+    private lateinit var navMyPage: LinearLayout
+
     private var currentNickname: String = ""
     private var currentProfileImageUrl: String = ""
     private var currentLockerName: String = ""
@@ -78,6 +83,11 @@ class MypageActivity : AppCompatActivity() {
         tvLockerName = findViewById(R.id.tvLockerName)
         ivProfilePhoto = findViewById(R.id.ivProfilePhoto)
         timetableContainer = findViewById(R.id.boxTimetableImage)
+
+        navHome = findViewById(R.id.navHome)
+        navMyMarket = findViewById(R.id.navMyMarket)
+        navChat = findViewById(R.id.navChat)
+        navMyPage = findViewById(R.id.navMyPage)
     }
 
     private fun setupTimetableContainer() {
@@ -93,7 +103,9 @@ class MypageActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         btnEditTimetable.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+            val intent = Intent(Intent.ACTION_PICK).apply {
+                type = "image/*"
+            }
             pickTimetableImageLauncher.launch(intent)
         }
 
@@ -105,17 +117,26 @@ class MypageActivity : AppCompatActivity() {
             showNicknameEditDialog()
         }
 
-        findViewById<LinearLayout>(R.id.gohome)?.setOnClickListener {
+        navHome.setOnClickListener {
             startActivity(Intent(this, MarketActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
         }
-        findViewById<LinearLayout>(R.id.goMymarket)?.setOnClickListener {
+
+        navMyMarket.setOnClickListener {
             startActivity(Intent(this, MyMarketActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
         }
-        findViewById<LinearLayout>(R.id.gochat)?.setOnClickListener {
+
+        navChat.setOnClickListener {
             startActivity(Intent(this, ChatListActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
         }
-        findViewById<LinearLayout>(R.id.gomypage)?.setOnClickListener {
-            startActivity(Intent(this, MypageActivity::class.java))
+
+        navMyPage.setOnClickListener {
+            // 현재 페이지
         }
     }
 
@@ -124,6 +145,7 @@ class MypageActivity : AppCompatActivity() {
             setText(currentNickname)
             setSingleLine()
         }
+
         AlertDialog.Builder(this)
             .setTitle("닉네임 수정")
             .setView(editText)
@@ -162,20 +184,23 @@ class MypageActivity : AppCompatActivity() {
 
                 profileNameButton.text = currentNickname.ifBlank { "닉네임 없음" }
 
-                // 사물함 상세 정보 별도 조회 → "차관 1층 수학과 3그룹 3행 9열" 포맷
                 try {
                     val lockerResp = memberApi.getMyLocker(guestUuid)
                     val lr = lockerResp.body()?.result
+
                     if (lr != null) {
                         val floorNum = lr.floor.trim().toIntOrNull() ?: lr.floor
-                        val formatted = "${lr.building} ${floorNum}층 ${lr.major} ${lr.lockerGroup}그룹 ${lr.row}행 ${lr.col}열"
+                        val formatted =
+                            "${lr.building} ${floorNum}층 ${lr.major} ${lr.lockerGroup}그룹 ${lr.row}행 ${lr.col}열"
                         tvLockerName.text = "• $formatted"
                         currentLockerName = formatted
                     } else {
-                        tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                        tvLockerName.text =
+                            if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
                     }
                 } catch (e: Exception) {
-                    tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                    tvLockerName.text =
+                        if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
                 }
 
                 if (currentTimetableData.isNotBlank()) {
@@ -213,8 +238,10 @@ class MypageActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = memberApi.updateProfile(guestUuid, request)
+
                 if (response.isSuccessful && response.body()?.success == true) {
                     val result = response.body()!!.result
+
                     if (result != null) {
                         currentNickname = result.nickname
                         currentProfileImageUrl = result.profileImageUrl
@@ -222,22 +249,30 @@ class MypageActivity : AppCompatActivity() {
                         currentTimetableData = result.timetableData
 
                         profileNameButton.text = currentNickname.ifBlank { "닉네임 없음" }
-                        // 저장 후에도 상세 포맷으로 재조회
+
                         try {
                             val lr2 = memberApi.getMyLocker(guestUuid).body()?.result
                             if (lr2 != null) {
                                 val floorNum = lr2.floor.trim().toIntOrNull() ?: lr2.floor
-                                tvLockerName.text = "• ${lr2.building} ${floorNum}층 ${lr2.major} ${lr2.lockerGroup}그룹 ${lr2.row}행 ${lr2.col}열"
+                                tvLockerName.text =
+                                    "• ${lr2.building} ${floorNum}층 ${lr2.major} ${lr2.lockerGroup}그룹 ${lr2.row}행 ${lr2.col}열"
                             } else {
-                                tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                                tvLockerName.text =
+                                    if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
                             }
                         } catch (e2: Exception) {
-                            tvLockerName.text = if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
+                            tvLockerName.text =
+                                if (currentLockerName.isBlank()) "• 등록된 사물함이 없습니다." else "• $currentLockerName"
                         }
                     }
+
                     Toast.makeText(this@MypageActivity, "프로필이 저장되었습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@MypageActivity, "저장 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MypageActivity,
+                        "저장 실패: ${response.code()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -250,7 +285,12 @@ class MypageActivity : AppCompatActivity() {
         try {
             val parsedTimetable = Gson().fromJson(json, ParsedTimetable::class.java)
             val classList = parsedTimetable.classes.filter { !it.name.isNullOrBlank() }
-            if (classList.isEmpty()) showEmptyTimetable() else showTimetable(classList)
+
+            if (classList.isEmpty()) {
+                showEmptyTimetable()
+            } else {
+                showTimetable(classList)
+            }
         } catch (e: Exception) {
             showEmptyTimetable()
         }
@@ -266,17 +306,29 @@ class MypageActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val imageFile = withContext(Dispatchers.IO) { uriToFile(uri) }
+
                 if (imageFile == null || !imageFile.exists()) {
-                    Toast.makeText(this@MypageActivity, "이미지 파일 변환에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MypageActivity,
+                        "이미지 파일 변환에 실패했습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@launch
                 }
 
-                val requestFile = imageFile.asRequestBody(contentResolver.getType(uri)?.toMediaTypeOrNull())
-                val imagePart = MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
+                val requestFile =
+                    imageFile.asRequestBody(contentResolver.getType(uri)?.toMediaTypeOrNull())
+                val imagePart =
+                    MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
 
                 val response = memberApi.parseTimetableImage(guestUuid, imagePart)
+
                 if (!response.isSuccessful) {
-                    Toast.makeText(this@MypageActivity, "업로드 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MypageActivity,
+                        "업로드 실패: ${response.code()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@launch
                 }
 
@@ -286,6 +338,7 @@ class MypageActivity : AppCompatActivity() {
                     rawElement.isJsonPrimitive && rawElement.asJsonPrimitive.isString -> rawElement.asString
                     else -> rawElement.toString()
                 }
+
                 if (!newTimetableData.isNullOrBlank()) {
                     renderTimetableFromJson(newTimetableData)
                     saveProfile(timetableData = newTimetableData)
@@ -316,11 +369,13 @@ class MypageActivity : AppCompatActivity() {
         return try {
             val fileName = getFileName(uri) ?: "timetable_image.jpg"
             val tempFile = File(cacheDir, fileName)
+
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 FileOutputStream(tempFile).use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
             }
+
             tempFile
         } catch (e: Exception) {
             e.printStackTrace()
@@ -330,6 +385,7 @@ class MypageActivity : AppCompatActivity() {
 
     private fun getFileName(uri: Uri): String? {
         var name: String? = null
+
         if (uri.scheme == "content") {
             contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                 val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -338,7 +394,11 @@ class MypageActivity : AppCompatActivity() {
                 }
             }
         }
-        if (name == null) name = uri.lastPathSegment
+
+        if (name == null) {
+            name = uri.lastPathSegment
+        }
+
         return name
     }
 }

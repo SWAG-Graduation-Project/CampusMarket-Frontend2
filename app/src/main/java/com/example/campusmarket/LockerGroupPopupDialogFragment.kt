@@ -159,7 +159,7 @@ class LockerGroupPopupDialogFragment(
         if (isHighlight) {
             val markerSize = (loungeImageStage.width * 0.10f).toInt()
             val marker = ImageView(requireContext()).apply {
-                setImageResource(R.drawable.here)
+                setImageResource(R.drawable.here1)
                 scaleType = ImageView.ScaleType.FIT_CENTER
             }
             val markerParams = FrameLayout.LayoutParams(markerSize, (markerSize * 1.4f).toInt())

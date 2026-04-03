@@ -259,6 +259,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:background="@drawable/bg_gray_post_image"
+                    android:src="@drawable/jaket3"
                     android:scaleType="centerCrop" />
 
                 <LinearLayout

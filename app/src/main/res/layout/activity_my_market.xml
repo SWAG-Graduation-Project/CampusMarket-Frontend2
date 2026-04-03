@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/detailbackgruound"
@@ -128,7 +129,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="구매 완료"
+            android:text="판매 완료"
             android:textColor="#999999"
             android:backgroundTint="#EEEEEE" />
     </LinearLayout>
@@ -165,6 +166,7 @@
         tools:listitem="@layout/item_user_market_post" />
 
     <!-- 하단 네비게이션 바 -->
+    <!-- 하단 네비게이션 바 -->
     <LinearLayout
         android:id="@+id/NavBar"
         android:layout_width="0dp"
@@ -175,58 +177,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-
         <!-- 홈 -->
         <LinearLayout
+            android:id="@+id/navHome"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ichome" />
+                android:src="@drawable/homegray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="홈"
                 android:textSize="10sp"
-                android:textColor="#AF6330"
+                android:textColor="#999999"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <!-- 내 상점 -->
         <LinearLayout
+            android:id="@+id/navMyMarket"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icmymarket" />
+                android:src="@drawable/brownmarket" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="내 상점"
                 android:textSize="10sp"
-                android:textColor="#999999"
+                android:textColor="#AF6330"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <!-- 채팅 -->
         <LinearLayout
+            android:id="@+id/navChat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="40dp"
@@ -243,11 +253,14 @@
 
         <!-- MY -->
         <LinearLayout
+            android:id="@+id/navMyPage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="40dp"
@@ -262,5 +275,4 @@
                 android:textColor="#999999" />
         </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
