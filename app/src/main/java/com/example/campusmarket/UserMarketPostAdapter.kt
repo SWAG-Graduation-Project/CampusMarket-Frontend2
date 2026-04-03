@@ -45,8 +45,6 @@ class UserMarketPostAdapter(
         private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         private val tvDate: TextView = itemView.findViewById(R.id.tvDate)
         private val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
-        private val ivHeart: ImageView = itemView.findViewById(R.id.ivHeart)
-        private val tvLikeCount: TextView = itemView.findViewById(R.id.tvLikeCount)
 
         private var imageJob: Job? = null
 
@@ -54,12 +52,9 @@ class UserMarketPostAdapter(
             tvTitle.text = item.name
             tvDate.text = formatDate(item.createdAt)
             tvPrice.text = if (item.isFree) "무료 나눔" else formatPrice(item.price)
-            tvLikeCount.text = item.wishCount.toString()
 
-            ivHeart.setImageResource(
-                if (item.wishCount > 0) R.drawable.blackheart
-                else R.drawable.binheart
-            )
+
+
 
             ivProduct.setOnClickListener {
                 onProductImageClick(item.productId)

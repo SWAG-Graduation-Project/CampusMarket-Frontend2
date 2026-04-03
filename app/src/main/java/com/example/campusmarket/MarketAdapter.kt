@@ -7,7 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MarketAdapter(private val items: List<String>) :
+data class MarketItem(val title: String, val price: String, val imageResId: Int)
+
+class MarketAdapter(private val items: List<MarketItem>) :
     RecyclerView.Adapter<MarketAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -18,13 +20,15 @@ class MarketAdapter(private val items: List<String>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user_market_post, parent, false)
+            .inflate(R.layout.item_market_post, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = items[position]
-        holder.price.text = "15,000원"
+        val item = items[position]
+        holder.title.text = item.title
+        holder.price.text = item.price
+        holder.image.setImageResource(item.imageResId)
     }
 
     override fun getItemCount(): Int = items.size

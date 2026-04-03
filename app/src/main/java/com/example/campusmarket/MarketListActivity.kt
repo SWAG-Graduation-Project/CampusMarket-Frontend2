@@ -38,18 +38,17 @@ class MarketListActivity : AppCompatActivity() {
 
             val recyclerView = findViewById<RecyclerView>(R.id.recyclerMarketList)
 
-            // 더미 데이터
             val dummyList = listOf(
-                "상품 1",
-                "상품 2",
-                "상품 3",
-                "상품 4",
-                "상품 4",
-
-                "상품 4",
-
-                "상품 5",
-                "상품 5"
+                MarketItem("까만 바지", "15,000원", R.drawable.pants),
+                MarketItem("운동화", "50,000원", R.drawable.shoes2),
+                MarketItem("까만 자켓", "18,000원", R.drawable.jaket),
+                MarketItem("초록 자켓", "10,000원", R.drawable.jaket3),
+                MarketItem("까만 자켓", "20,000원", R.drawable.jaket),
+                MarketItem("초록 자켓", "13,000원", R.drawable.jaket3),
+                MarketItem("까만 자켓", "17,000원", R.drawable.jaket),
+                MarketItem("초록 자켓", "11,000원", R.drawable.jaket3),
+                MarketItem("까만 자켓", "19,000원", R.drawable.jaket),
+                MarketItem("초록 자켓", "14,000원", R.drawable.jaket3)
             )
 
             recyclerView.layoutManager = LinearLayoutManager(this)

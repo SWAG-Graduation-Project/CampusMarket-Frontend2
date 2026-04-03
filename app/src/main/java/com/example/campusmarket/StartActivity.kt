@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.campusmarket.model.GuestRequest
 import com.example.campusmarket.model.GuestResponse
 import com.example.campusmarket.model.GuestResult
-import com.example.campusmarket.RetrofitClient
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -38,7 +37,7 @@ class StartActivity : AppCompatActivity() {
             insets
         }
 
-        checkOrCreateGuest()
+        createNewGuestAlways()
 
         root.setOnClickListener {
             if (guestReady) {
@@ -50,21 +49,17 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkOrCreateGuest() {
+    private fun createNewGuestAlways() {
         val pref = getSharedPreferences("app_prefs", MODE_PRIVATE)
 
-
-
-        val savedGuestUuid = pref.getString("guestUuid", null)
-
-        if (savedGuestUuid != null) {
-            Log.d("API", "이미 저장된 guestUuid 있음: $savedGuestUuid")
-            guestReady = true
-            return
-        }
+        // 기존 guest 정보 삭제
+        pref.edit()
+            .remove("guestUuid")
+            .remove("memberId")
+            .apply()
 
         val newGuestUuid = UUID.randomUUID().toString()
-        Log.d("API", "새 guestUuid 생성: $newGuestUuid")
+        Log.d("API", "항상 새 guestUuid 생성: $newGuestUuid")
 
         if (USE_MOCK) {
             createGuestMock(newGuestUuid)
